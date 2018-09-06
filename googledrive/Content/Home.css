@@ -1,0 +1,71 @@
+﻿body {
+}
+
+/* Remove the navbar's default margin-bottom and rounded borders */
+.navbar {
+    margin-bottom: 0;
+    border-radius: 0;
+}
+
+/* Set height of the grid so .sidenav can be 100% (adjust as needed) */
+.row.content {
+    height: 860px
+}
+
+/* Set gray background color and 100% height */
+.sidenav {
+    padding-top: 20px;
+    background-color: #f1f1f1;
+    height: 100%;
+}
+
+td {
+    cursor: pointer;
+    line-height: 50px;
+}
+
+.icon {
+    width: 25px;
+    height: 25px;
+    display: inline-block;
+    line-height: 50px;
+    margin-bottom: -7px;
+    margin-right: 12px;
+    background-size: 25px;
+}
+
+.folder {
+    background-image: url('Icons/folder.png');
+}
+
+.file {
+    background-image: url('Icons/file.png');
+}
+
+.borderless td, .borderless th {
+    border: none;
+}
+
+.nav-link {
+    color: white !important;
+}
+
+    .nav-link:hover {
+        text-decoration: underline;
+    }
+
+.breadcrumb {
+    margin-top: 20px;
+}
+
+/* On small screens, set height to 'auto' for sidenav and grid */
+@media screen and (max-width: 767px) {
+    .sidenav {
+        height: auto;
+        padding: 15px;
+    }
+
+    .row.content {
+        height: auto;
+    }
+}
