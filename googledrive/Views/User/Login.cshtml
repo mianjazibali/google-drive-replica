@@ -1,0 +1,55 @@
+﻿
+@{
+    ViewBag.Title = "Login";
+    Layout = "~/Views/Shared/_LoginLayout.cshtml";
+}
+
+@section script{
+    <script>
+        $(document).ready(function () {
+            $("#loginbtn").click(function () {
+                var $userlogin = $("#userlogin").val();
+                var $userpassword = $("#userpassword").val();
+
+                if ((!$userlogin) || (!$userpassword)) {
+                    alert("Error ! One or More Fields Are Empty");
+                    return false;
+                }
+
+                var $data = { 'Login': $userlogin, 'Password': $userpassword };
+
+                $.ajax({
+                    type: 'POST',
+                    dataType: 'JSON',
+                    url: "@Url.Action("ValidateUser","User")",
+                    data: JSON.stringify($data),
+                    contentType: "application/json",
+                    processdata: false,
+                    success: function (result) {
+                        if (result == "") {
+                            alert("Invalid Username Or Password");
+                            $('#userpassword').val("");
+                        }
+                        else {
+                            window.location.href = "@Url.Content("~/Home")";
+                        }
+                    },
+                    error: function () {
+                        alert('Failed To Login ! Internal Error');
+                    }
+                });
+
+            });
+        });
+    </script>
+}
+
+<h2>Login</h2>
+
+<div>
+    <input type="text" name="userlogin" id="userlogin" value="" />
+    <input type="password" name="userpassword" id="userpassword" value="" />
+    <input type="submit" id="loginbtn" value="Login" />
+</div>
+
+

@@ -2,41 +2,26 @@
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_HomeLayout.cshtml";
+    ViewBag.Username = Session["Username"];
 }
 
-<h2>Index</h2>
-
 @{
-    <tr>
-        <td><input type="checkbox" checked="checked"></td>
-        <td><div class="icon folder"></div><span>Folder 1<span></td>
-        <td>Folder 1</td>
-        <td>--</td>
-        <td>admin</td>
-        <td>05/09/2018 08:10 PM</td>
-    </tr>
-    <tr>
-        <td><input type="checkbox" checked="checked"></td>
-        <td><div class="icon folder"></div><span>Folder 2<span></td>
-        <td>Folder 2</td>
-        <td>--</td>
-        <td>admin</td>
-        <td>05/09/2018 08:10 PM</td>
-    </tr>
-    <tr>
-        <td><input type="checkbox" checked="checked"></td>
-        <td><div class="icon folder"></div><span>Folder 3<span></td>
-        <td>Folder 3</td>
-        <td>--</td>
-        <td>admin</td>
-        <td>05/09/2018 08:10 PM</td>
-    </tr>
-    <tr>
-        <td><input type="checkbox" checked="checked"></td>
-        <td><div class="icon file"></div><span>File 1<span></td>
-        <td>Home</td>
-        <td>--</td>
-        <td>admin</td>
-        <td>05/09/2018 08:10 PM</td>
-    </tr>
+    <input type="text" id="parentfolderid" value="0" hidden/>
+    <form id="upload" enctype="multipart/form-data" hidden>
+        <input type="file" id="FileUpload" multiple />
+    </form>
+    <ol class="breadcrumb"></ol>
+    <table class="table table-hover borderless">
+        <thead>
+            <tr>
+                <th scope="col" hidden>#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Parent Folder</th>
+                <th scope="col">Size</th>
+                <th scope="col">Created By</th>
+                <th scope="col">Created On</th>
+            </tr>
+        </thead>
+        <tbody id="TableBody"></tbody>
+    </table>
 }

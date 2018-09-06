@@ -16,11 +16,13 @@
     <link href="~/Content/Home.css" rel="stylesheet" />
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
     <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/Home.js"></script>
+    @RenderSection("script", false)
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
-            <a class="navbar-brand" href="#">Drive</a>
+            <a class="navbar-brand" href="@Url.Content("~/Home")">Drive</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -34,8 +36,8 @@
                 </form>
                 -->
                 <ul class="navbar-nav my-2 my-lg-0">
-                    <li class="nav-item"><a class="nav-link" href="#"><i class="fa fa-user" aria-hidden="true" style="margin-right: 5px;"></i>Username</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#"><i class="fa fa-sign-out" aria-hidden="true" style="margin-right: 5px;"></i>Logout</a></li>
+                    <li class="nav-item"><a class="nav-link"><i class="fa fa-user" aria-hidden="true" style="margin-right: 5px;"></i>@ViewBag.Username</a></li>
+                    <li class="nav-item"><a class="nav-link" href="@Url.Content("~/User/Logout")"><i class="fa fa-sign-out" aria-hidden="true" style="margin-right: 5px;"></i>Logout</a></li>
                 </ul>
             </div>
         </div>
@@ -51,53 +53,21 @@
                 </div>
             </div>
             <div class="col-sm-8 text-left">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="#">Home</a></li>
-                    <li class="breadcrumb-item"><a href="#">Library</a></li>
-                    <li class="breadcrumb-item active">Data</li>
-                </ol>
-                <table class="table table-hover borderless">
-                    <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Parent Folder</th>
-                            <th scope="col">Size</th>
-                            <th scope="col">Created By</th>
-                            <th scope="col">Created On</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @RenderBody()
-                    </tbody>
-                </table>
+                @RenderBody()
             </div>
             <div class="col-sm-2 sidenav">
                 <div class="well">
-                    <button type="button" class="btn btn-primary btn-lg btn-block"><i class="fa fa-file" aria-hidden="true" style="margin-right: 7px;"></i>Upload File</button><br />
-                    <button type="button" class="btn btn-outline-primary btn-lg btn-block" data-toggle="modal" data-target="#createFolderModal"><i class="fa fa-folder" aria-hidden="true" style="margin-right: 7px;"></i>Create Folder</button>
-                </div>
-            </div>
-            <!-- Modal Body -->
-            <div class="modal fade" id="createFolderModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            ...
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Save changes</button>
+                    <button type="button" class="btn btn-primary btn-lg btn-block" id="FileUploadDummy"><i class="fa fa-file" aria-hidden="true" style="margin-right: 7px;"></i>Upload File</button><br />
+                    <button type="button" id="createfolderbtn" class="btn btn-outline-primary btn-lg btn-block" data-toggle="modal" data-target="#addContact"><i class="fa fa-folder" aria-hidden="true" style="margin-right: 7px;"></i>Create Folder</button>
+                    <div id="createfolderinput" style="height: 100px; margin-top: 20px; display: none;">
+                        <button type="button" id="savefolder" style="float: right">Create</button>
+                        <div style="overflow: hidden; padding-right: .5em;">
+                            <input type="text" id="mfoldername" value="" placeholder="New Folder" style="width: 100%" />
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 </body>
 </html>
