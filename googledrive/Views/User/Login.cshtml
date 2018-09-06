@@ -4,52 +4,22 @@
     Layout = "~/Views/Shared/_LoginLayout.cshtml";
 }
 
-@section script{
-    <script>
-        $(document).ready(function () {
-            $("#loginbtn").click(function () {
-                var $userlogin = $("#userlogin").val();
-                var $userpassword = $("#userpassword").val();
-
-                if ((!$userlogin) || (!$userpassword)) {
-                    alert("Error ! One or More Fields Are Empty");
-                    return false;
-                }
-
-                var $data = { 'Login': $userlogin, 'Password': $userpassword };
-
-                $.ajax({
-                    type: 'POST',
-                    dataType: 'JSON',
-                    url: "@Url.Action("ValidateUser","User")",
-                    data: JSON.stringify($data),
-                    contentType: "application/json",
-                    processdata: false,
-                    success: function (result) {
-                        if (result == "") {
-                            alert("Invalid Username Or Password");
-                            $('#userpassword').val("");
-                        }
-                        else {
-                            window.location.href = "@Url.Content("~/Home")";
-                        }
-                    },
-                    error: function () {
-                        alert('Failed To Login ! Internal Error');
-                    }
-                });
-
-            });
-        });
-    </script>
+@{ 
+    <div class="container-fluid maindiv">
+        <div class="container subdiv">
+            <div class="header">
+                <h1>Login</h1>
+            </div>
+            <hr style="margin: 10px 0;" />
+            <span>Login : </span>
+            <input type="text" name="userlogin" id="userlogin" value="" />
+            <span>Password : </span>
+            <input type="password" name="userpassword" id="userpassword" value="" />
+            <br /><br />
+            <input type="submit" class="btn btn-outline-success btn-block" id="loginbtn" value="Login" />
+        </div>
+    </div>
 }
 
-<h2>Login</h2>
-
-<div>
-    <input type="text" name="userlogin" id="userlogin" value="" />
-    <input type="password" name="userpassword" id="userpassword" value="" />
-    <input type="submit" id="loginbtn" value="Login" />
-</div>
 
 
