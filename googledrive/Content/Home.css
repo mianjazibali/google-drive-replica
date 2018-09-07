@@ -1,6 +1,4 @@
-﻿body {
-}
-
+﻿
 /* Remove the navbar's default margin-bottom and rounded borders */
 .navbar {
     margin-bottom: 0;
@@ -47,12 +45,12 @@ td {
 }
 
 .nav-link {
-    color: white !important;
+    color: white;
 }
 
-    .nav-link:hover {
-        text-decoration: underline;
-    }
+.nav-link:hover {
+    text-decoration: underline;
+}
 
 .breadcrumb {
     margin-top: 20px;

@@ -34,8 +34,32 @@ namespace GoogleDrive.Controllers
         public JsonResult CreateFolder(FolderDTO dto)
         {
             string login = (string)Session["Login"];
-            dto.Id = DBManager.getUserIdByLogin(login);
+            dto.CreatedBy = DBManager.getUserIdByLogin(login);
             return Json(DBManager.createFolder(dto), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult EditFile(FileDTO dto)
+        {
+            return Json(DBManager.editFile(dto), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult DeleteFolder(FolderDTO dto)
+        {
+            return Json(DBManager.deleteFolder(dto), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult DeleteFile(FileDTO dto)
+        {
+            return Json(DBManager.deleteFile(dto), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult DownloadFile(int id)
+        {
+            return Json(DBManager.downloadFile(id), JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -77,7 +101,15 @@ namespace GoogleDrive.Controllers
                         });
                     }
                     int result = DBManager.uploadFiles(dtos);
-                    return Json(result + " File(s) Uploaded Successfully!");
+                    if(result == files.Count)
+                    {
+                        return Json(result + " File(s) Uploaded Successfully!");
+                    }
+                    else
+                    {
+                        return Json(result + " File(s) Uploaded Successfully! & " + (files.Count - result) + " Duplication Found");
+                    }
+                    
                 }
                 catch (Exception ex)
                 {
