@@ -31,12 +31,12 @@
 
             <div class="collapse navbar-collapse" id="navbarColor01">
                 <ul class="navbar-nav mr-auto"></ul>
-                <!--
-                <form class="form-inline my-2 my-lg-0">
-                  <input class="form-control mr-sm-2" type="text" placeholder="Search">
-                  <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
-                </form>
-                -->
+                
+                <div class="form-inline my-2 my-lg-0">
+                    <input id="searchinput" type="text" placeholder="Search" style="padding-left: 5px; margin: 3px -6px 0 0;">
+                    <a href="#" id="searchbtn" class="nav-link"><i class="fa fa-search" aria-hidden="true" style="margin-right: -5px;"></i></a>
+                </div>
+                
                 <ul class="navbar-nav my-2 my-lg-0">
                     <li class="nav-item"><a class="nav-link"><i class="fa fa-user" aria-hidden="true" style="margin-right: 5px;"></i>@ViewBag.Username</a></li>
                     <li class="nav-item"><a class="nav-link" href="@Url.Content("~/User/Logout")"><i class="fa fa-sign-out" aria-hidden="true" style="margin-right: 5px;"></i>Logout</a></li>

@@ -72,6 +72,71 @@ namespace GoogleDrive.Models
             }
         }
 
+        public static List<FolderDTO> searchFolders(string search)
+        {
+            string connString = @"Data Source=localhost;Initial Catalog=GoogleDrive;User ID=sa;Password=123";
+            using (SqlConnection conn = new SqlConnection(connString))
+            {
+                conn.Open();
+                string query = string.Format(@"select * from Folders where Name like '%' + @Search + '%'");
+                SqlCommand command = new SqlCommand(query, conn);
+                SqlParameter param = new SqlParameter
+                {
+                    ParameterName = "Search",
+                    SqlDbType = System.Data.SqlDbType.VarChar,
+                    Value = search
+                };
+                command.Parameters.Add(param);
+                SqlDataReader reader = command.ExecuteReader();
+                List<FolderDTO> folders = new List<FolderDTO>();
+                while (reader.Read())
+                {
+                    FolderDTO folder = new FolderDTO();
+                    folder.Id = reader.GetInt32(0);
+                    folder.Name = reader.GetString(1);
+                    folder.ParentFolderId = reader.GetInt32(2);
+                    folder.CreatedBy = reader.GetInt32(3);
+                    folder.CreatedOn = reader.GetDateTime(4).ToString("dd/MM/yyyy hh:mm tt");
+                    folders.Add(folder);
+                }
+                return folders;
+            }
+        }
+
+        public static List<FileDTO> searchFiles(string search)
+        {
+            string connString = @"Data Source=localhost;Initial Catalog=GoogleDrive;User ID=sa;Password=123";
+            using (SqlConnection conn = new SqlConnection(connString))
+            {
+                conn.Open();
+                string query = string.Format(@"select * from Files where Name like '%' + @Search + '%'");
+                SqlCommand command = new SqlCommand(query, conn);
+                SqlParameter param = new SqlParameter
+                {
+                    ParameterName = "Search",
+                    SqlDbType = System.Data.SqlDbType.VarChar,
+                    Value = search
+                };
+                command.Parameters.Add(param);
+
+                SqlDataReader reader = command.ExecuteReader();
+                List<FileDTO> files = new List<FileDTO>();
+                while (reader.Read())
+                {
+                    FileDTO file = new FileDTO();
+                    file.Id = reader.GetInt32(0);
+                    file.Name = reader.GetString(2);
+                    file.ParentFolderId = reader.GetInt32(3);
+                    file.FileExt = reader.GetString(4);
+                    file.FileSizeInKB = reader.GetInt32(5);
+                    file.CreatedBy = reader.GetInt32(6);
+                    file.UploadedOn = reader.GetDateTime(7).ToString("dd/MM/yyyy hh:mm tt");
+                    files.Add(file);
+                }
+                return files;
+            }
+        }
+
         public static List<FileDTO> getFilesList(int Id)
         {
             string connString = @"Data Source=localhost;Initial Catalog=GoogleDrive;User ID=sa;Password=123";

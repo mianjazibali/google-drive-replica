@@ -2,6 +2,120 @@
     LoadFolders();
     CreateBreadCrumbs("Home", 0);
 
+    $("#searchbtn").on('click',function () {
+        var $search = $("#searchinput").val();
+        if (!$search) {
+            LoadFolders();
+            return false;
+        }
+        var $data = { 'search': $search };
+        $.ajax({
+            type: 'POST',
+            dataType: 'JSON',
+            url: '/Home/SearchFolders',
+            data: JSON.stringify($data),
+            contentType: "application/json; charset=utf-8",
+            processdata: false,
+            success: function (result) {
+                ClearTable();
+                console.log(result);
+                FolderResult(result);
+            },
+            error: function () {
+                alert('Failed');
+            }
+        });
+        $.ajax({
+            type: 'POST',
+            dataType: 'JSON',
+            url: '/Home/SearchFiles',
+            data: JSON.stringify($data),
+            contentType: "application/json; charset=utf-8",
+            processdata: false,
+            success: function (result) {
+                console.log(result);
+                FileResult(result);
+            },
+            error: function () {
+                alert('Failed');
+            }
+        });
+        return false;
+    });
+
+    function FolderResult(result) {
+        for (var i = 0; i < result.length; i++) {
+            var tr = $('<tr>');
+            tr.attr({ value: result[i].Id, id: 'folder' });
+            var td = $('<td>');
+            td.text(result[i].Id);
+            td.hide();
+            tr.append(td);
+            td = $('<td>');
+            var div = $('<div>');
+            div.attr({ class: 'icon folder' });
+            td.append(div);
+            var sp = $('<span>');
+            sp.text(result[i].Name)
+            td.append(sp);
+            tr.append(td);
+            td = $('<td>');
+            td.text(result[i].ParentFolderId);
+            tr.append(td);
+            td = $('<td>');
+            td.text("--");
+            tr.append(td);
+            td = $('<td>');
+            td.text(result[i].CreatedBy);
+            tr.append(td);
+            td = $('<td>');
+            td.text(result[i].CreatedOn);
+            tr.append(td);
+            var body = $('#TableBody');
+            body.append(tr);
+            BindEvents();
+        }
+        return false;
+    }
+
+    function FileResult(result) {
+        for (var i = 0; i < result.length; i++) {
+            var tr = $('<tr>');
+            tr.attr({ value: result[i].Id, id: 'file' });
+            var td = $('<td>');
+            td.text(result[i].Id);
+            td.hide();
+            tr.append(td);
+            td = $('<td>');
+            var div = $('<div>');
+            div.attr({ class: 'icon file' });
+            td.append(div);
+            var sp = $('<span>');
+            sp.text(result[i].Name)
+            td.append(sp);
+            tr.append(td);
+            td = $('<td>');
+            td.text(result[i].FileExt);
+            td.attr({ style: 'display : none;' });
+            tr.append(td);
+            td = $('<td>');
+            td.text(result[i].ParentFolderId);
+            tr.append(td);
+            td = $('<td>');
+            td.text(result[i].FileSizeInKB);
+            tr.append(td);
+            td = $('<td>');
+            td.text(result[i].CreatedBy);
+            tr.append(td);
+            td = $('<td>');
+            td.text(result[i].UploadedOn);
+            tr.append(td);
+            var body = $('#TableBody');
+            body.append(tr);
+        }
+        return false;
+    }
+
     $(function () {
         $.contextMenu({
             selector: '#folder',

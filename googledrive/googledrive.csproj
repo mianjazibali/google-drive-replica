@@ -176,6 +176,7 @@
     <Content Include="Content\Icons\mp3.png" />
     <Content Include="Content\Icons\pdf.png" />
     <Content Include="Content\Icons\txt.png" />
+    <Content Include="Content\img\load.gif" />
     <Content Include="Content\Login.css" />
     <Content Include="Content\Lumen.css" />
     <Content Include="favicon.ico" />

@@ -25,6 +25,18 @@ namespace GoogleDrive.Controllers
         }
 
         [HttpPost]
+        public ActionResult SearchFolders(string search)
+        {
+            return Json(DBManager.searchFolders(search), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public ActionResult SearchFiles(string search)
+        {
+            return Json(DBManager.searchFiles(search), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
         public ActionResult ListFiles(int Id)
         {
             return Json(DBManager.getFilesList(Id), JsonRequestBehavior.AllowGet);
