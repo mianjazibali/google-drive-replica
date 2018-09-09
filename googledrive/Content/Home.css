@@ -56,6 +56,21 @@ td {
     margin-top: 20px;
 }
 
+.breadcrumb-item a{
+    cursor: pointer;
+}
+
+.breadcrumb-item a:hover {
+    text-decoration: underline !important;
+}
+
+.breadcrumb-item.active a{
+    cursor: text;
+}
+
+.navbar-nav .nav-item a.nav-link {
+    color: white !important;
+}
 /* On small screens, set height to 'auto' for sidenav and grid */
 @media screen and (max-width: 767px) {
     .sidenav {
