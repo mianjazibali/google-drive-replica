@@ -56,7 +56,8 @@ td {
     margin-top: 20px;
 }
 
-.breadcrumb-item a{
+.breadcrumb-item a {
+    color: cornflowerblue !important;
     cursor: pointer;
 }
 
@@ -64,8 +65,10 @@ td {
     text-decoration: underline !important;
 }
 
-.breadcrumb-item.active a{
+.breadcrumb-item.active a {
+    color: lightslategrey !important;
     cursor: text;
+    text-decoration: none !important;
 }
 
 .navbar-nav .nav-item a.nav-link {

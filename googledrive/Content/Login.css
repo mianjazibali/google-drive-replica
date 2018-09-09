@@ -106,6 +106,32 @@
     color: #EF3B3A;
 }
 
+.sm-msg {
+    padding: 0;
+    margin: -12px 0 2px 0;
+    float: left;
+    font-size: 10px;
+    display: none;
+}
+
+.lg-msg{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    margin: 15px auto;
+    max-width: 360px;
+    display: none;
+}
+
+p.success{
+    color: limegreen !important;
+}
+
+p.error {
+    color: red !important;
+}
+
 body {
     background: #76b852; /* fallback for old browsers */
     background: -webkit-linear-gradient(right, #76b852, #8DC26F);

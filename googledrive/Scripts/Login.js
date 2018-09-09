@@ -17,7 +17,11 @@
         var $userpassword = $("#userpassword").val();
 
         if ((!$userlogin) || (!$userpassword)) {
-            alert("Error ! One or More Fields Are Empty");
+            var $alert = $("#lg-msg");
+            $alert.addClass("alert-danger");
+            $alert.find("strong").text("Error ! ");
+            $alert.find("span").text("One or More Fields Are Empty");
+            $alert.fadeIn("slow").delay(3000).fadeOut("slow");
             return false;
         }
 
@@ -32,7 +36,11 @@
             processdata: false,
             success: function (result) {
                 if (result == "") {
-                    alert("Invalid Username Or Password");
+                    var $alert = $("#lg-msg");
+                    $alert.addClass("alert-danger");
+                    $alert.find("strong").text("Error ! ");
+                    $alert.find("span").text("Invalid Username Or Password");
+                    $alert.fadeIn("slow").delay(3000).fadeOut("slow");
                     $('#userpassword').val("");
                 }
                 else {
@@ -40,7 +48,11 @@
                 }
             },
             error: function () {
-                alert('Failed To Login ! Internal Error');
+                var $alert = $("#lg-msg");
+                $alert.addClass("alert-danger");
+                $alert.find("strong").text("Error ! ");
+                $alert.find("span").text("Internal Server Error");
+                $alert.fadeIn("slow").delay(3000).fadeOut("slow");
             }
         });
 
@@ -53,7 +65,11 @@
         var $reguserpassword = $("#reguserpassword").val();
 
         if ((!$regusername) || (!$reguserlogin) || (!$reguseremail) || (!$reguserpassword)) {
-            alert("Error ! One or More Fields Are Empty");
+            var $alert = $("#lg-msg");
+            $alert.addClass("alert-danger");
+            $alert.find("strong").text("Error ! ");
+            $alert.find("span").text("One or More Fields Are Empty");
+            $alert.fadeIn("slow").delay(3000).fadeOut("slow");
             return false;
         }
 
@@ -68,16 +84,26 @@
             processdata: false,
             success: function (result) {
                 if (result == 0) {
-                    alert("Login ! Already Exist Try Another");
+                    $("#sm-msg").fadeIn("slow");
+                    $('#sm-msg').delay(5000).fadeOut("slow");
                 }
                 else {
                     $("#login").trigger('click');
                     $("#userlogin").val($reguserlogin);
-                    alert('Registration Successfull ! Try Login');
+                    var $alert = $("#lg-msg");
+                    $alert.removeClass("alert-danger");
+                    $alert.addClass("alert-success");
+                    $alert.find("strong").text("Well Done ! ");
+                    $alert.find("span").text("Registration Successfull");
+                    $alert.fadeIn("slow").delay(3000).fadeOut("slow");
                 }
             },
             error: function () {
-                alert('Failed To Register ! Internal Error');
+                var $alert = $("#lg-msg");
+                $alert.addClass("alert-danger");
+                $alert.find("strong").text("Error ! ");
+                $alert.find("span").text("Internal Server Error");
+                $alert.fadeIn("slow").delay(3000).fadeOut("slow");
             }
         });
 

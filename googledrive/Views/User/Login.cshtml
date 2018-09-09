@@ -5,10 +5,16 @@
 }
 
 <div class="login-page">
+    <div id="lg-msg" class="lg-msg alert alert-dismissible">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong></strong>
+        <span></span>
+    </div>
     <div class="form">
         <div class="register-form" style="display: none;">
             <input type="text" name="userlogin" id="regusername" placeholder="Name" />
             <input type="text" name="userlogin" id="reguserlogin" placeholder="Login" />
+            <p id="sm-msg" class="sm-msg error">Sorry, that login's taken. Try another?</p>
             <input type="email" name="useremail" id="reguseremail" placeholder="Email" />
             <input type="password" name="userpassword" id="reguserpassword" placeholder="Password" />
             <button id="registerbtn">Register</button>
