@@ -4,22 +4,24 @@
     Layout = "~/Views/Shared/_LoginLayout.cshtml";
 }
 
-@{ 
-    <div class="container-fluid maindiv">
-        <div class="container subdiv">
-            <div class="header">
-                <h1>Login</h1>
-            </div>
-            <hr style="margin: 10px 0;" />
-            <span>Login : </span>
-            <input type="text" name="userlogin" id="userlogin" value="" />
-            <span>Password : </span>
-            <input type="password" name="userpassword" id="userpassword" value="" />
-            <br /><br />
-            <input type="submit" class="btn btn-outline-success btn-block" id="loginbtn" value="Login" />
+<div class="login-page">
+    <div class="form">
+        <div class="register-form" style="display: none;">
+            <input type="text" name="userlogin" id="regusername" placeholder="Name" />
+            <input type="text" name="userlogin" id="reguserlogin" placeholder="Login" />
+            <input type="email" name="useremail" id="reguseremail" placeholder="Email" />
+            <input type="password" name="userpassword" id="reguserpassword" placeholder="Password" />
+            <button id="registerbtn">Register</button>
+            <p class="message">Already registered? <a href="#" id="login">Login</a></p>
+        </div>
+        <div class="login-form">
+            <input type="text" name="userlogin" id="userlogin" placeholder="Login" />
+            <input type="password" name="userpassword" id="userpassword" placeholder="Password" />
+            <button id="loginbtn">Login</button>
+            <p class="message">Not registered? <a href="#" id="createaccount">Register Now</a></p>
         </div>
     </div>
-}
+</div>
 
 
 

@@ -32,6 +32,12 @@ namespace GoogleDrive.Controllers
             return Json(username, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpPost]
+        public JsonResult RegisterUser(UserDTO dto)
+        {
+            return Json(DBManager.registerUser(dto), JsonRequestBehavior.AllowGet);
+        }
+
         public ActionResult Logout()
         {
             Session["Login"] = null;

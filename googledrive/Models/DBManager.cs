@@ -153,6 +153,7 @@ namespace GoogleDrive.Models
                 reader.Read();
                 if(reader.GetInt32(0) > 0)
                 {
+                    reader.Close();
                     return 0;
                 }
                 reader.Close();
@@ -204,6 +205,72 @@ namespace GoogleDrive.Models
                     ParameterName = "CreatedOn",
                     SqlDbType = System.Data.SqlDbType.DateTime,
                     Value = System.DateTime.Now
+                };
+                command.Parameters.Add(param);
+
+                int result = command.ExecuteNonQuery();
+
+                return result;
+            }
+        }
+
+        public static int registerUser(UserDTO dto)
+        {
+            string connString = @"Data Source=localhost;Initial Catalog=GoogleDrive;User ID=sa;Password=123";
+            using (SqlConnection conn = new SqlConnection(connString))
+            {
+                conn.Open();
+                string query = string.Format(@"select count(*) from Users where Login = @Login");
+                SqlCommand command = new SqlCommand(query, conn);
+                SqlParameter param = new SqlParameter
+                {
+                    ParameterName = "Login",
+                    SqlDbType = System.Data.SqlDbType.VarChar,
+                    Value = dto.Login
+                };
+                command.Parameters.Add(param);
+
+                SqlDataReader reader = command.ExecuteReader();
+                reader.Read();
+                if (reader.GetInt32(0) > 0)
+                {
+                    reader.Close();
+                    return 0;
+                }
+                reader.Close();
+
+                query = string.Format(@"insert into Users(Name,Login,Email,Password) values(@Name,@Login,@Email,@Password)");
+                command = new SqlCommand(query, conn);
+
+                param = new SqlParameter
+                {
+                    ParameterName = "Name",
+                    SqlDbType = System.Data.SqlDbType.VarChar,
+                    Value = dto.Name
+                };
+                command.Parameters.Add(param);
+
+                param = new SqlParameter
+                {
+                    ParameterName = "Login",
+                    SqlDbType = System.Data.SqlDbType.VarChar,
+                    Value = dto.Login
+                };
+                command.Parameters.Add(param);
+
+                param = new SqlParameter
+                {
+                    ParameterName = "Email",
+                    SqlDbType = System.Data.SqlDbType.VarChar,
+                    Value = dto.Email
+                };
+                command.Parameters.Add(param);
+
+                param = new SqlParameter
+                {
+                    ParameterName = "Password",
+                    SqlDbType = System.Data.SqlDbType.VarChar,
+                    Value = dto.Password
                 };
                 command.Parameters.Add(param);
 
