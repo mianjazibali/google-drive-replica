@@ -1,3 +1,5 @@
+Nugget : update-package Microsoft.CodeDom.Providers.DotNetCompilerPlatform -r
+
 create database GoogleDrive;
 
 use GoogleDrive;
