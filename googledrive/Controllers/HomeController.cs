@@ -113,14 +113,7 @@ namespace GoogleDrive.Controllers
                         });
                     }
                     int result = DBManager.uploadFiles(dtos);
-                    if(result == files.Count)
-                    {
-                        return Json(result + " File(s) Uploaded Successfully!");
-                    }
-                    else
-                    {
-                        return Json(result + " File(s) Uploaded Successfully! & " + (files.Count - result) + " Duplication Found");
-                    }
+                    return Json(result);
                     
                 }
                 catch (Exception ex)

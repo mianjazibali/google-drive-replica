@@ -2,50 +2,56 @@
     LoadFolders();
     CreateBreadCrumbs("Home", 0);
 
-    $("#searchbtn").click(function () {
-        $("#searchinput").fadeToggle("slow");
-    });
-
     $("#searchinput").keyup(function () {
         var $search = $("#searchinput").val();
-        
-        if (!$search) {
-            LoadFolders();
-            return false;
-        }
         var $data = { 'search': $search };
-        $.ajax({
-            type: 'POST',
-            dataType: 'JSON',
-            url: '/Home/SearchFolders',
-            data: JSON.stringify($data),
-            contentType: "application/json; charset=utf-8",
-            processdata: false,
-            success: function (result) {
-                ClearTable();
-                console.log(result);
-                FolderResult(result);
-            },
-            error: function () {
-                alert('Failed');
+        setTimeout(function () {
+            $("TableBody").hide();
+            if ($search == "") {
+                LoadFolders();
+                return false;
             }
-        });
-        $.ajax({
-            type: 'POST',
-            dataType: 'JSON',
-            url: '/Home/SearchFiles',
-            data: JSON.stringify($data),
-            contentType: "application/json; charset=utf-8",
-            processdata: false,
-            success: function (result) {
-                console.log(result);
-                $("#TableBody").find("#file").remove();
-                FileResult(result);
-            },
-            error: function () {
-                alert('Failed');
-            }
-        });
+            $.ajax({
+                type: 'POST',
+                dataType: 'JSON',
+                url: '/Home/SearchFolders',
+                data: JSON.stringify($data),
+                contentType: "application/json; charset=utf-8",
+                processdata: false,
+                success: function (result) {
+                    ClearTable();
+                    console.log(result);
+                    FolderResult(result);
+                    $.ajax({
+                        type: 'POST',
+                        dataType: 'JSON',
+                        url: '/Home/SearchFiles',
+                        data: JSON.stringify($data),
+                        contentType: "application/json; charset=utf-8",
+                        processdata: false,
+                        success: function (result) {
+                            console.log(result);
+                            FileResult(result);
+                            $("TableBody").show();
+                        },
+                        error: function (err) {
+                            var $alert = $("#lg-msg");
+                            $alert.addClass("alert-danger");
+                            $alert.find("strong").text("Error ! ");
+                            $alert.find("span").text(err.statusText);
+                            $alert.fadeIn("slow").delay(3000).fadeOut("slow");
+                        }
+                    });
+                },
+                error: function (err) {
+                    var $alert = $("#lg-msg");
+                    $alert.addClass("alert-danger");
+                    $alert.find("strong").text("Error ! ");
+                    $alert.find("span").text(err.statusText);
+                    $alert.fadeIn("slow").delay(3000).fadeOut("slow");
+                }
+            });    
+        }, 500);
         return false;
     });
 
@@ -97,7 +103,7 @@
             div.attr({ class: 'icon file' });
             td.append(div);
             var sp = $('<span>');
-            sp.text(result[i].Name)
+            sp.text(result[i].Name + result[i].FileExt);
             td.append(sp);
             tr.append(td);
             td = $('<td>');
@@ -108,7 +114,7 @@
             td.text(result[i].ParentFolderId);
             tr.append(td);
             td = $('<td>');
-            td.text(result[i].FileSizeInKB);
+            td.text(result[i].FileSizeInKB + " KB");
             tr.append(td);
             td = $('<td>');
             td.text(result[i].CreatedBy);
@@ -147,11 +153,20 @@
                         contentType: false,
                         processData: false,
                         success: function (result) {
-                            alert($name + ' Deleted Successfully');
+                            var $alert = $("#lg-msg");
+                            $alert.removeClass("alert-danger");
+                            $alert.addClass("alert-success");
+                            $alert.find("strong").text("Well Done ! ");
+                            $alert.find("span").text($name + ' Deleted Successfully');
+                            $alert.fadeIn("slow").delay(3000).fadeOut("slow");
                             $tr.remove();
                         },
                         error: function (err) {
-                            alert(err.statusText);
+                            var $alert = $("#lg-msg");
+                            $alert.addClass("alert-danger");
+                            $alert.find("strong").text("Error ! ");
+                            $alert.find("span").text(err.statusText);
+                            $alert.fadeIn("slow").delay(3000).fadeOut("slow");
                         }
                     });
                 }
@@ -176,8 +191,7 @@
                     var $tr = $(this);
                     var $id = $tr.find(':nth-child(1)').text();
                     var $name = $tr.find('td:nth-child(2)').text();
-                    var $ext = $tr.find(':nth-child(3)').text();
-                    if (!confirm("Are you sure you want to delete \"" + $name + $ext + "\"")) {
+                    if (!confirm("Are you sure you want to delete \"" + $name + "\"")) {
                         return;
                     }
 
@@ -187,11 +201,20 @@
                         contentType: false,
                         processData: false,
                         success: function (result) {
-                            alert($name + ' Deleted Successfully');
+                            var $alert = $("#lg-msg");
+                            $alert.removeClass("alert-danger");
+                            $alert.addClass("alert-success");
+                            $alert.find("strong").text("Well Done ! ");
+                            $alert.find("span").text($name + ' Deleted Successfully');
+                            $alert.fadeIn("slow").delay(3000).fadeOut("slow");
                             $tr.remove();
                         },
                         error: function (err) {
-                            alert(err.statusText);
+                            var $alert = $("#lg-msg");
+                            $alert.addClass("alert-danger");
+                            $alert.find("strong").text("Error ! ");
+                            $alert.find("span").text(err.statusText);
+                            $alert.fadeIn("slow").delay(3000).fadeOut("slow");
                         }
                     });
                 }
@@ -209,7 +232,11 @@
                             //$.fileDownload("Uploads/" + result.UniqueName + result.FileExt);
                         },
                         error: function (err) {
-                            alert(err.statusText);
+                            var $alert = $("#lg-msg");
+                            $alert.addClass("alert-danger");
+                            $alert.find("strong").text("Error ! ");
+                            $alert.find("span").text(err.statusText);
+                            $alert.fadeIn("slow").delay(3000).fadeOut("slow");
                         }
                     });
                     
@@ -342,7 +369,7 @@
                     div.attr({ class: 'icon file' });
                     td.append(div);
                     var sp = $('<span>');
-                    sp.text(result[i].Name)
+                    sp.text(result[i].Name + result[i].FileExt)
                     td.append(sp);
                     tr.append(td);
                     td = $('<td>');
@@ -353,7 +380,7 @@
                     td.text(result[i].ParentFolderId);
                     tr.append(td);
                     td = $('<td>');
-                    td.text(result[i].FileSizeInKB);
+                    td.text(result[i].FileSizeInKB + " KB");
                     tr.append(td);
                     td = $('<td>');
                     td.text(result[i].CreatedBy);
@@ -413,7 +440,6 @@
             for (var i = 0; i < files.length; i++) {
                 fileData.append(files[i].name, files[i]);
             }
-
             $.ajax({
                 url: '/Home/UploadFiles/' + $parent,
                 type: "POST",
@@ -421,13 +447,30 @@
                 processData: false,
                 data: fileData,
                 success: function (result) {
-                    alert(result);
+                    var $alert = $("#lg-msg");
+                    if (result == files.length) {
+                        $alert.removeClass("alert-danger");
+                        $alert.addClass("alert-success");
+                        $alert.find("strong").text("Well Done ! ");
+                        $alert.find("span").text(result + " File(s) Uploaded Successfully");
+                    }
+                    else {
+                        $alert.removeClass("alert-success");
+                        $alert.addClass("alert-danger");
+                        $alert.find("strong").text("Oops ! ");
+                        $alert.find("span").text(files.length - result + " File(s) Already Exist");
+                    }
+                    $alert.fadeIn("slow").delay(3000).fadeOut("slow");
                     $("#upload").trigger("reset");
                     ClearTable();
                     LoadFolders();
                 },
                 error: function (err) {
-                    alert(err.statusText);
+                    var $alert = $("#lg-msg");
+                    $alert.addClass("alert-danger");
+                    $alert.find("strong").text("Error ! ");
+                    $alert.find("span").text(err.statusText);
+                    $alert.fadeIn("slow").delay(3000).fadeOut("slow");
                 }
             });
         } else {
@@ -447,7 +490,11 @@
         var $foldername = $("#mfoldername").val();
 
         if (!$foldername){
-            alert("Error ! Folder Name Can Not Be Empty");
+            var $alert = $("#lg-msg");
+            $alert.addClass("alert-danger");
+            $alert.find("strong").text("Error ! ");
+            $alert.find("span").text("Folder Name Can Not Be Empty");
+            $alert.fadeIn("slow").delay(3000).fadeOut("slow");
             $("#createfolderinput").slideUp();
             return false;
         }
@@ -463,14 +510,24 @@
             processdata: false,
             success: function (result) {
                 if (result == 0) {
-                    alert("\"" + $foldername + "\" already exist in the current directory");
+                    var $alert = $("#lg-msg");
+                    $alert.addClass("alert-danger");
+                    $alert.find("strong").text("Error ! ");
+                    $alert.find("span").text("\"" + $foldername + "\" already exist in the current directory");
+                    $alert.fadeIn("slow").delay(3000).fadeOut("slow");
+                    $("#createfolderinput").slideUp();
+                    return false;
                 }
                 $('#mfoldername').val("");
                 LoadFolders();
                 $("#createfolderinput").slideUp();
             },
-            error: function () {
-                alert('Failed');
+            error: function (err) {
+                var $alert = $("#lg-msg");
+                $alert.addClass("alert-danger");
+                $alert.find("strong").text("Error ! ");
+                $alert.find("span").text(err.statusText);
+                $alert.fadeIn("slow").delay(3000).fadeOut("slow");
             }
         });
     });

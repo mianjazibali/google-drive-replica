@@ -124,14 +124,6 @@
     display: none;
 }
 
-p.success{
-    color: limegreen !important;
-}
-
-p.error {
-    color: red !important;
-}
-
 body {
     background: #76b852; /* fallback for old browsers */
     background: -webkit-linear-gradient(right, #76b852, #8DC26F);

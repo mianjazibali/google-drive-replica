@@ -74,6 +74,17 @@ td {
 .navbar-nav .nav-item a.nav-link {
     color: white !important;
 }
+
+.lg-msg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    margin: 3px auto;
+    max-width: 360px;
+    z-index: 100;
+}
+
 /* On small screens, set height to 'auto' for sidenav and grid */
 @media screen and (max-width: 767px) {
     .sidenav {
