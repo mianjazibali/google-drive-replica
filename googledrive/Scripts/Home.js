@@ -228,8 +228,9 @@
                         processData: false,
                         success: function (result) {
                             //alert(result.UniqueName + result.FileExt);
-                            window.location = "Uploads/" + result.UniqueName + result.FileExt;
+                            //window.location = "Uploads/" + result.UniqueName + result.FileExt;
                             //$.fileDownload("Uploads/" + result.UniqueName + result.FileExt);
+                            console.log(result);
                         },
                         error: function (err) {
                             var $alert = $("#lg-msg");

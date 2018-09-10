@@ -69,9 +69,11 @@ namespace GoogleDrive.Controllers
         }
 
         [HttpPost]
-        public JsonResult DownloadFile(int id)
+        public FileResult DownloadFile(int id)
         {
-            return Json(DBManager.downloadFile(id), JsonRequestBehavior.AllowGet);
+            FileDTO dto = DBManager.downloadFile(id);
+            var path = System.IO.Path.Combine(Server.MapPath("~/Uploads/"), dto.UniqueName + dto.FileExt);
+            return File(path, "application/gif", dto.Name);
         }
 
         [HttpPost]
