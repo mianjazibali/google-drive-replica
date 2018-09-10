@@ -2,8 +2,13 @@
     LoadFolders();
     CreateBreadCrumbs("Home", 0);
 
-    $("#searchbtn").on('click',function () {
+    $("#searchbtn").click(function () {
+        $("#searchinput").fadeToggle("slow");
+    });
+
+    $("#searchinput").keyup(function () {
         var $search = $("#searchinput").val();
+        
         if (!$search) {
             LoadFolders();
             return false;
@@ -34,6 +39,7 @@
             processdata: false,
             success: function (result) {
                 console.log(result);
+                $("#TableBody").find("#file").remove();
                 FileResult(result);
             },
             error: function () {
