@@ -47,9 +47,20 @@ namespace GoogleDrive.Models
             using (SqlConnection conn = new SqlConnection(connString))
             {
                 conn.Open();
-                string query = string.Format(@"select * from Folders where ParentFolderId = @parent");
+                string query = string.Format("update Folders SET ViewCount = ViewCount + 1 where Id = @Id");
                 SqlCommand command = new SqlCommand(query, conn);
                 SqlParameter param = new SqlParameter
+                {
+                    ParameterName = "Id",
+                    SqlDbType = System.Data.SqlDbType.VarChar,
+                    Value = Id
+                };
+                command.Parameters.Add(param);
+                command.ExecuteNonQuery();
+
+                query = string.Format(@"select * from Folders where ParentFolderId = @parent");
+                command = new SqlCommand(query, conn);
+                param = new SqlParameter
                 {
                     ParameterName = "parent",
                     SqlDbType = System.Data.SqlDbType.VarChar,
@@ -66,6 +77,7 @@ namespace GoogleDrive.Models
                     folder.ParentFolderId = reader.GetInt32(2);
                     folder.CreatedBy = reader.GetInt32(3);
                     folder.CreatedOn = reader.GetDateTime(4).ToString("dd/MM/yyyy hh:mm tt");
+                    folder.ViewCount = reader.GetInt32(6);
                     folders.Add(folder);
                 }
                 return folders;
@@ -97,6 +109,7 @@ namespace GoogleDrive.Models
                     folder.ParentFolderId = reader.GetInt32(2);
                     folder.CreatedBy = reader.GetInt32(3);
                     folder.CreatedOn = reader.GetDateTime(4).ToString("dd/MM/yyyy hh:mm tt");
+                    folder.ViewCount = reader.GetInt32(6);
                     folders.Add(folder);
                 }
                 return folders;

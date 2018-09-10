@@ -16,10 +16,11 @@ Primary key(Id)
 create table Folders(
 Id int not null identity(1,1),
 Name varchar(20) not null,
-ParentFolderId int not null, 
+ParentFolderId int not null default 0, 
 CreatedBy int not null,
 CreatedOn datetime not null,
-IsActive bit not null,
+IsActive bit not null default 0,
+ViewCount int not null default 0,
 Primary key(Id)
 )
 
@@ -27,11 +28,11 @@ create table Files(
 Id int not null identity(1,1),
 UniqueName varchar(50) not null,
 Name varchar(20) not null,
-ParentFolderId int not null,
+ParentFolderId int not null default 0,
 FileExt varchar(20) not null,
 FileSizeInKB int not null,
 CreatedBy int not null,
 UploadedOn datetime not null,
-IsActive bit not null,
+IsActive bit not null default 0,
 Primary key(Id)
 )

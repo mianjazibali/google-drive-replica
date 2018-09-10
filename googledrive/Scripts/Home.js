@@ -83,6 +83,9 @@
             td = $('<td>');
             td.text(result[i].CreatedOn);
             tr.append(td);
+            td = $('<td>');
+            td.text(result[i].ViewCount);
+            tr.append(td);
             var body = $('#TableBody');
             body.append(tr);
             BindEvents();
@@ -121,6 +124,9 @@
             tr.append(td);
             td = $('<td>');
             td.text(result[i].UploadedOn);
+            tr.append(td);
+            td = $('<td>');
+            td.text("--");
             tr.append(td);
             var body = $('#TableBody');
             body.append(tr);
@@ -334,6 +340,9 @@
                     td = $('<td>');
                     td.text(result[i].CreatedOn);
                     tr.append(td);
+                    td = $('<td>');
+                    td.text(result[i].ViewCount);
+                    tr.append(td);
                     var body = $('#TableBody');
                     body.append(tr);
                     BindEvents();
@@ -388,6 +397,9 @@
                     tr.append(td);
                     td = $('<td>');
                     td.text(result[i].UploadedOn);
+                    tr.append(td);
+                    td = $('<td>');
+                    td.text("--");
                     tr.append(td);
                     var body = $('#TableBody');
                     body.append(tr);

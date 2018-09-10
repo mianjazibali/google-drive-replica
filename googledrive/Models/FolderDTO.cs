@@ -13,5 +13,6 @@ namespace GoogleDrive.Models
         public int CreatedBy { set; get; }
         public string CreatedOn { set; get; }
         public bool IsActive { set; get; }
+        public int ViewCount { set; get; }
     }
 }
