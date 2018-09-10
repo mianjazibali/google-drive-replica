@@ -42,7 +42,7 @@ namespace GoogleDrive.Controllers
         {
             Session["Login"] = null;
             Session.Abandon();
-            return View("Login");
+            return Redirect("~/User/Login");
         }
     }
 }
