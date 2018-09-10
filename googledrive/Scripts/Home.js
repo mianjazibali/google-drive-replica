@@ -39,7 +39,7 @@
                             $alert.addClass("alert-danger");
                             $alert.find("strong").text("Error ! ");
                             $alert.find("span").text(err.statusText);
-                            $alert.fadeIn("slow").delay(3000).fadeOut("slow");
+                            $alert.fadeIn("slow").delay(3000).slideUp("slow");
                         }
                     });
                 },
@@ -48,7 +48,7 @@
                     $alert.addClass("alert-danger");
                     $alert.find("strong").text("Error ! ");
                     $alert.find("span").text(err.statusText);
-                    $alert.fadeIn("slow").delay(3000).fadeOut("slow");
+                    $alert.fadeIn("slow").delay(3000).slideUp("slow");
                 }
             });    
         }, 500);
@@ -162,9 +162,8 @@
                             var $alert = $("#lg-msg");
                             $alert.removeClass("alert-danger");
                             $alert.addClass("alert-success");
-                            $alert.find("strong").text("Well Done ! ");
-                            $alert.find("span").text($name + ' Deleted Successfully');
-                            $alert.fadeIn("slow").delay(3000).fadeOut("slow");
+                            $alert.find("span").text("Folder \"" + $name + "\" Deleted Successfully");
+                            $alert.fadeIn("slow").delay(3000).slideUp("slow");
                             $tr.remove();
                         },
                         error: function (err) {
@@ -172,7 +171,7 @@
                             $alert.addClass("alert-danger");
                             $alert.find("strong").text("Error ! ");
                             $alert.find("span").text(err.statusText);
-                            $alert.fadeIn("slow").delay(3000).fadeOut("slow");
+                            $alert.fadeIn("slow").delay(3000).slideUp("slow");
                         }
                     });
                 }
@@ -210,17 +209,15 @@
                             var $alert = $("#lg-msg");
                             $alert.removeClass("alert-danger");
                             $alert.addClass("alert-success");
-                            $alert.find("strong").text("Well Done ! ");
-                            $alert.find("span").text($name + ' Deleted Successfully');
-                            $alert.fadeIn("slow").delay(3000).fadeOut("slow");
+                            $alert.find("span").text("File \"" + $name + "\" Deleted Successfully");
+                            $alert.fadeIn("slow").delay(3000).slideUp("slow");
                             $tr.remove();
                         },
                         error: function (err) {
                             var $alert = $("#lg-msg");
                             $alert.addClass("alert-danger");
-                            $alert.find("strong").text("Error ! ");
                             $alert.find("span").text(err.statusText);
-                            $alert.fadeIn("slow").delay(3000).fadeOut("slow");
+                            $alert.fadeIn("slow").delay(3000).slideUp("slow");
                         }
                     });
                 }
@@ -233,9 +230,12 @@
                         contentType: false,
                         processData: false,
                         success: function (result) {
-                            //alert(result.UniqueName + result.FileExt);
+                            //alert(result.UniqueName + result.FileExt + result.Name);
                             //window.location = "Uploads/" + result.UniqueName + result.FileExt;
                             //$.fileDownload("Uploads/" + result.UniqueName + result.FileExt);
+                            $("#downloadanchor").attr({ href: '/Uploads/' + result.UniqueName + result.FileExt, download: result.Name });
+                            $("#downloadanchor").text(result.Name);
+                            $("#downloadanchor")[0].click();
                             console.log(result);
                         },
                         error: function (err) {
@@ -243,7 +243,7 @@
                             $alert.addClass("alert-danger");
                             $alert.find("strong").text("Error ! ");
                             $alert.find("span").text(err.statusText);
-                            $alert.fadeIn("slow").delay(3000).fadeOut("slow");
+                            $alert.fadeIn("slow").delay(3000).slideUp("slow");
                         }
                     });
                     
@@ -279,7 +279,7 @@
         });
 
         $("#savefolderbtnclose").click(function () {
-            $("#savefolderinput").fadeOut();
+            $("#savefolderinput").slideUp();
         });
 
         
@@ -464,16 +464,14 @@
                     if (result == files.length) {
                         $alert.removeClass("alert-danger");
                         $alert.addClass("alert-success");
-                        $alert.find("strong").text("Well Done ! ");
                         $alert.find("span").text(result + " File(s) Uploaded Successfully");
                     }
                     else {
                         $alert.removeClass("alert-success");
                         $alert.addClass("alert-danger");
-                        $alert.find("strong").text("Oops ! ");
                         $alert.find("span").text(files.length - result + " File(s) Already Exist");
                     }
-                    $alert.fadeIn("slow").delay(3000).fadeOut("slow");
+                    $alert.fadeIn("slow").delay(3000).slideUp("slow");
                     $("#upload").trigger("reset");
                     ClearTable();
                     LoadFolders();
@@ -483,7 +481,7 @@
                     $alert.addClass("alert-danger");
                     $alert.find("strong").text("Error ! ");
                     $alert.find("span").text(err.statusText);
-                    $alert.fadeIn("slow").delay(3000).fadeOut("slow");
+                    $alert.fadeIn("slow").delay(3000).slideUp("slow");
                 }
             });
         } else {
@@ -505,9 +503,9 @@
         if (!$foldername){
             var $alert = $("#lg-msg");
             $alert.addClass("alert-danger");
-            $alert.find("strong").text("Error ! ");
-            $alert.find("span").text("Folder Name Can Not Be Empty");
-            $alert.fadeIn("slow").delay(3000).fadeOut("slow");
+            $alert.find("strong").text("Oops ! ");
+            $alert.find("span").text("Empty Folder Name");
+            $alert.fadeIn("slow").delay(3000).slideUp("slow");
             $("#createfolderinput").slideUp();
             return false;
         }
@@ -525,9 +523,9 @@
                 if (result == 0) {
                     var $alert = $("#lg-msg");
                     $alert.addClass("alert-danger");
-                    $alert.find("strong").text("Error ! ");
-                    $alert.find("span").text("\"" + $foldername + "\" already exist in the current directory");
-                    $alert.fadeIn("slow").delay(3000).fadeOut("slow");
+                    $alert.find("strong").text("Oops ! ");
+                    $alert.find("span").text("\"" + $foldername + "\" Already Exist");
+                    $alert.fadeIn("slow").delay(3000).slideUp("slow");
                     $("#createfolderinput").slideUp();
                     return false;
                 }
@@ -540,7 +538,7 @@
                 $alert.addClass("alert-danger");
                 $alert.find("strong").text("Error ! ");
                 $alert.find("span").text(err.statusText);
-                $alert.fadeIn("slow").delay(3000).fadeOut("slow");
+                $alert.fadeIn("slow").delay(3000).slideUp("slow");
             }
         });
     });

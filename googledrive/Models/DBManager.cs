@@ -210,9 +210,20 @@ namespace GoogleDrive.Models
             using (SqlConnection conn = new SqlConnection(connString))
             {
                 conn.Open();
-                string query = string.Format(@"select count(*) from Folders where Name = @Name AND ParentFolderId = @ParentFolderId");
+                string query = string.Format("update Folders SET ViewCount = ViewCount - 1 where Id = @Id");
                 SqlCommand command = new SqlCommand(query, conn);
                 SqlParameter param = new SqlParameter
+                {
+                    ParameterName = "Id",
+                    SqlDbType = System.Data.SqlDbType.VarChar,
+                    Value = dto.ParentFolderId
+                };
+                command.Parameters.Add(param);
+                command.ExecuteNonQuery();
+
+                query = string.Format(@"select count(*) from Folders where Name = @Name AND ParentFolderId = @ParentFolderId");
+                command = new SqlCommand(query, conn);
+                param = new SqlParameter
                 {
                     ParameterName = "Name",
                     SqlDbType = System.Data.SqlDbType.VarChar,
@@ -389,7 +400,6 @@ namespace GoogleDrive.Models
                 conn.Open();
                 string query = string.Format(@"delete from Files where Id = @Id");
                 SqlCommand command = new SqlCommand(query, conn);
-
                 SqlParameter param = new SqlParameter
                 {
                     ParameterName = "Id",
@@ -400,6 +410,33 @@ namespace GoogleDrive.Models
 
                 int result = command.ExecuteNonQuery();
 
+                if(result > 0)
+                {
+                    query = string.Format(@"select * from Files where Id = @Id");
+                    command = new SqlCommand(query, conn);
+                    param = new SqlParameter
+                    {
+                        ParameterName = "Id",
+                        SqlDbType = System.Data.SqlDbType.Int,
+                        Value = dto.Id
+                    };
+                    command.Parameters.Add(param);
+                    SqlDataReader reader = command.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        dto.UniqueName = reader.GetString(1);
+                        dto.FileExt = reader.GetString(4);
+                    }
+
+                    string path = HttpContext.Current.Server.MapPath("~/Uploads/" + dto.UniqueName + dto.FileExt);
+
+                    if ((System.IO.File.Exists(path)))
+                    {
+                        System.IO.File.Delete(path);
+                    }
+                    reader.Close();
+                }
                 return result;
             }
         }

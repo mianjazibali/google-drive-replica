@@ -4,9 +4,9 @@
     Layout = "~/Views/Shared/_HomeLayout.cshtml";
     ViewBag.Username = Session["Username"];
 }
-
 @{
-    <input type="text" id="parentfolderid" value="0" hidden/>
+    <input type="text" id="parentfolderid" value="0" hidden />
+    <a id="downloadanchor" hidden>Download</a>
     <form id="upload" enctype="multipart/form-data" hidden>
         <input type="file" id="FileUpload" multiple />
     </form>
@@ -20,7 +20,7 @@
                 <th scope="col">Size</th>
                 <th scope="col">Created By</th>
                 <th scope="col">Created On</th>
-                <th scope="col">Views</th>
+                <th scope="col">View Count</th>
             </tr>
         </thead>
         <tbody id="TableBody"></tbody>

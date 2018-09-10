@@ -21,7 +21,7 @@
             $alert.addClass("alert-danger");
             $alert.find("strong").text("Error ! ");
             $alert.find("span").text("One or More Fields Are Empty");
-            $alert.fadeIn("slow").delay(3000).fadeOut("slow");
+            $alert.slideDown("slow").delay(3000).slideUp("slow");
             return false;
         }
 
@@ -40,7 +40,7 @@
                     $alert.addClass("alert-danger");
                     $alert.find("strong").text("Error ! ");
                     $alert.find("span").text("Invalid Username Or Password");
-                    $alert.fadeIn("slow").delay(3000).fadeOut("slow");
+                    $alert.slideDown("slow").delay(3000).slideUp("slow");
                     $('#userpassword').val("");
                 }
                 else {
@@ -51,8 +51,8 @@
                 var $alert = $("#lg-msg");
                 $alert.addClass("alert-danger");
                 $alert.find("strong").text("Error ! ");
-                $alert.find("span").text("Internal Server Error");
-                $alert.fadeIn("slow").delay(3000).fadeOut("slow");
+                $alert.find("span").text(err.statusText);
+                $alert.slideDown("slow").delay(3000).slideUp("slow");
             }
         });
 
@@ -69,7 +69,7 @@
             $alert.addClass("alert-danger");
             $alert.find("strong").text("Error ! ");
             $alert.find("span").text("One or More Fields Are Empty");
-            $alert.fadeIn("slow").delay(3000).fadeOut("slow");
+            $alert.slideDown("slow").delay(3000).slideUp("slow");
             return false;
         }
 
@@ -95,15 +95,16 @@
                     $alert.addClass("alert-success");
                     $alert.find("strong").text("Well Done ! ");
                     $alert.find("span").text("Registration Successfull");
-                    $alert.fadeIn("slow").delay(3000).fadeOut("slow");
+                    $alert.slideDown("slow").delay(3000).slideUp("slow");
+                    $("#registerbtn").closest("div").find("input").val("");
                 }
             },
-            error: function () {
+            error: function (err) {
                 var $alert = $("#lg-msg");
                 $alert.addClass("alert-danger");
                 $alert.find("strong").text("Error ! ");
-                $alert.find("span").text("Internal Server Error");
-                $alert.fadeIn("slow").delay(3000).fadeOut("slow");
+                $alert.find("span").text(err.statusText);
+                $alert.slideDown("slow").delay(3000).slideUp("slow");
             }
         });
 
