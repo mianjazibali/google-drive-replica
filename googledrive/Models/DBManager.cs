@@ -148,6 +148,68 @@ namespace GoogleDrive.Models
             }
         }
 
+        public static string generateFileToken(int id)
+        {
+            string connString = @"Data Source=localhost;Initial Catalog=GoogleDrive;User ID=sa;Password=123";
+            using (SqlConnection conn = new SqlConnection(connString))
+            {
+                conn.Open();
+                string token = Guid.NewGuid().ToString();
+                string query = string.Format("update Files set Token = @Token where Id = @Id");
+                SqlCommand command = new SqlCommand(query, conn);
+                SqlParameter param = new SqlParameter
+                {
+                    ParameterName = "Token",
+                    SqlDbType = System.Data.SqlDbType.VarChar,
+                    Value = token
+                };
+                command.Parameters.Add(param);
+                param = new SqlParameter
+                {
+                    ParameterName = "Id",
+                    SqlDbType = System.Data.SqlDbType.VarChar,
+                    Value = id
+                };
+                command.Parameters.Add(param);
+                int result = command.ExecuteNonQuery();
+                if(result > 0)
+                {
+                    return token;
+                }
+                else
+                {
+                    return "";
+                }
+            }
+        }
+
+        public static FileDTO getFile(string token)
+        {
+            string connString = @"Data Source=localhost;Initial Catalog=GoogleDrive;User ID=sa;Password=123";
+            using (SqlConnection conn = new SqlConnection(connString))
+            {
+                conn.Open();
+                string query = string.Format(@"select * from Files where Token = @Token");
+                SqlCommand command = new SqlCommand(query, conn);
+
+                SqlParameter param = new SqlParameter();
+                param.ParameterName = "Token";
+                param.SqlDbType = System.Data.SqlDbType.VarChar;
+                param.Value = token;
+                command.Parameters.Add(param);
+
+                SqlDataReader reader = command.ExecuteReader();
+                FileDTO dto = new FileDTO();
+                if (reader.Read())
+                {
+                    dto.UniqueName = reader.GetString(1);
+                    dto.Name = reader.GetString(2);
+                    dto.FileExt = reader.GetString(4);
+                }
+                return dto;
+            }
+        } 
+
         public static int resetPassword(UserDTO dto)
         {
             string connString = @"Data Source=localhost;Initial Catalog=GoogleDrive;User ID=sa;Password=123";

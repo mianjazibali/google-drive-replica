@@ -237,13 +237,40 @@
                             $alert.fadeIn("slow").delay(5000).slideUp("slow");
                         }
                     });
-                    
+                }
+                else
+                if (key == "Public") {
+                    var $id = $(this).find(':nth-child(1)').text();
+                    $.ajax({
+                        type: "POST",
+                        url: '/Home/GenerateFileToken/' + $id,
+                        contentType: false,
+                        processData: false,
+                        success: function (result) {
+                            console.log(result);
+                        },
+                        error: function (err) {
+                            var $alert = $("#lg-msg");
+                            $alert.addClass("alert-danger");
+                            $alert.find("strong").text("Error ! ");
+                            $alert.find("span").text(err.statusText);
+                            $alert.fadeIn("slow").delay(5000).slideUp("slow");
+                        }
+                    });
                 }
             },
             items: {
                 "rename": { name: "Rename", icon: "edit" },
                 "delete": { name: "Delete", icon: "delete" },
-                "download": { name: "Download", icon: "paste" }
+                "download": { name: "Download", icon: "fa-download" },
+                "share": {
+                    "name": "Share",
+                    "icon": "fa-share-alt",
+                    "items": {
+                        "Public": { "name": "Public", "icon": "fa-users" },
+                        "Specific": { "name": "Specific", "icon": "fa-user" }
+                    }
+                }
             }
         });
 

@@ -40,6 +40,12 @@ namespace GoogleDrive.Controllers
         }
 
         [HttpPost]
+        public ActionResult GenerateFileToken(int id)
+        {
+            return Json(DBManager.generateFileToken(id), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
         public ActionResult ListFiles(int Id)
         {
             int UserId = (int)Session["Id"];
