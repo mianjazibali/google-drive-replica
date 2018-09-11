@@ -2,21 +2,21 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Net.Mail;
 using System.Web;
 
 namespace GoogleDrive.Models
 {
     public static class DBManager
-    {
+    { 
         public static string GetUser(UserDTO dto)
         {
             string connString = @"Data Source=localhost;Initial Catalog=GoogleDrive;User ID=sa;Password=123";
             using (SqlConnection conn = new SqlConnection(connString))
             {
                 conn.Open();
-                string query = string.Format(@"select Name from Users where Login = @Login AND Password = @Password");
+                string query = string.Format(@"select Name from Users where Login = @Login AND Password = @Password AND Token != 'NULL'");
                 SqlCommand command = new SqlCommand(query, conn);
-
                 SqlParameter param = new SqlParameter();
                 param.ParameterName = "Login";
                 param.SqlDbType = System.Data.SqlDbType.VarChar;
@@ -28,8 +28,30 @@ namespace GoogleDrive.Models
                 param.SqlDbType = System.Data.SqlDbType.VarChar;
                 param.Value = dto.Password;
                 command.Parameters.Add(param);
-
+                command.ExecuteNonQuery();
                 SqlDataReader reader = command.ExecuteReader();
+                if (reader.Read())
+                {
+                    return "$";
+                }
+                reader.Close();
+
+                query = string.Format(@"select Name from Users where Login = @Login AND Password = @Password AND Token = 'NULL'");
+                command = new SqlCommand(query, conn);
+
+                param = new SqlParameter();
+                param.ParameterName = "Login";
+                param.SqlDbType = System.Data.SqlDbType.VarChar;
+                param.Value = dto.Login;
+                command.Parameters.Add(param);
+
+                param = new SqlParameter();
+                param.ParameterName = "Password";
+                param.SqlDbType = System.Data.SqlDbType.VarChar;
+                param.Value = dto.Password;
+                command.Parameters.Add(param);
+
+                reader = command.ExecuteReader();
                 if (reader.Read())
                 {
                     return reader.GetString(0);
@@ -38,6 +60,26 @@ namespace GoogleDrive.Models
                 {
                     return "";
                 }
+            }
+        }
+
+        public static int verifyUser(string token)
+        {
+            string connString = @"Data Source=localhost;Initial Catalog=GoogleDrive;User ID=sa;Password=123";
+            using (SqlConnection conn = new SqlConnection(connString))
+            {
+                conn.Open();
+                string query = string.Format("update Users set Token = 'NULL' where Token = @token");
+                SqlCommand command = new SqlCommand(query, conn);
+                SqlParameter param = new SqlParameter
+                {
+                    ParameterName = "token",
+                    SqlDbType = System.Data.SqlDbType.VarChar,
+                    Value = token
+                };
+                command.Parameters.Add(param);
+                int result = command.ExecuteNonQuery();
+                return result;
             }
         }
 
@@ -362,7 +404,6 @@ namespace GoogleDrive.Models
                     Value = dto.Login
                 };
                 command.Parameters.Add(param);
-
                 SqlDataReader reader = command.ExecuteReader();
                 reader.Read();
                 if (reader.GetInt32(0) > 0)
@@ -371,8 +412,26 @@ namespace GoogleDrive.Models
                     return 0;
                 }
                 reader.Close();
-
-                query = string.Format(@"insert into Users(Name,Login,Email,Password) values(@Name,@Login,@Email,@Password)");
+                dto.Token = Guid.NewGuid().ToString();
+                /*
+                try
+                {
+                    MailMessage mail = new MailMessage("m.mianjazibali@gmail.com", dto.Email);
+                    SmtpClient client = new SmtpClient();
+                    client.Port = 25;
+                    client.DeliveryMethod = SmtpDeliveryMethod.Network;
+                    client.UseDefaultCredentials = false;
+                    client.Host = "smtp.gmail.com";
+                    mail.Subject = "User Verification";
+                    mail.Body = HttpContext.Current.Server.MapPath("~/User/Verification/") + dto.Token;
+                    client.Send(mail);
+                }
+                catch (Exception)
+                {
+                    return -1;
+                }
+                */
+                query = string.Format(@"insert into Users(Name,Login,Email,Password,Token,CreatedOn) values(@Name,@Login,@Email,@Password,@Token,@CreatedOn)");
                 command = new SqlCommand(query, conn);
 
                 param = new SqlParameter
@@ -407,8 +466,23 @@ namespace GoogleDrive.Models
                 };
                 command.Parameters.Add(param);
 
-                int result = command.ExecuteNonQuery();
+                param = new SqlParameter
+                {
+                    ParameterName = "Token",
+                    SqlDbType = System.Data.SqlDbType.VarChar,
+                    Value = dto.Token
+                };
+                command.Parameters.Add(param);
 
+                param = new SqlParameter
+                {
+                    ParameterName = "CreatedOn",
+                    SqlDbType = System.Data.SqlDbType.VarChar,
+                    Value = DateTime.Now
+                };
+                command.Parameters.Add(param);
+
+                int result = command.ExecuteNonQuery();
                 return result;
             }
         }

@@ -33,6 +33,22 @@ namespace GoogleDrive.Controllers
             }
             return Json(username, JsonRequestBehavior.AllowGet);
         }
+        [HttpGet]
+        public ActionResult Verify(string id)
+        {
+            int result = DBManager.verifyUser(id);
+            if (result == 0)
+            {
+                TempData["Msg1"] = "Oops !";
+                TempData["Msg2"] = " Invalid Link";
+            }
+            else
+            {
+                TempData["Msg1"] = "Well Done !";
+                TempData["Msg2"] = " User Verified Successully";
+            }
+            return Redirect("~/User/Login");
+        }
 
         [HttpPost]
         public JsonResult RegisterUser(UserDTO dto)

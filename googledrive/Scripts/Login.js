@@ -1,5 +1,18 @@
 ﻿$(document).ready(function () {
 
+    var $verify = $("#lg-msg").find("strong").text();
+    if ($verify == "Oops !") {
+        var $alert = $("#lg-msg");
+        $alert.addClass("alert-danger");
+        $alert.slideDown("slow").delay(5000).slideUp("slow");
+    }
+    else
+    if ($verify == "Well Done !"){
+        var $alert = $("#lg-msg");
+        $alert.addClass("alert-success");
+        $alert.slideDown("slow").delay(5000).slideUp("slow");
+    }
+
     $("#createaccount").click(function () {
         $(".login-form").hide();
         $(".register-form").slideDown("slow");
@@ -21,7 +34,7 @@
             $alert.addClass("alert-danger");
             $alert.find("strong").text("Error ! ");
             $alert.find("span").text("One or More Fields Are Empty");
-            $alert.slideDown("slow").delay(3000).slideUp("slow");
+            $alert.slideDown("slow").delay(5000).slideUp("slow");
             return false;
         }
 
@@ -38,9 +51,18 @@
                 if (result == "") {
                     var $alert = $("#lg-msg");
                     $alert.addClass("alert-danger");
-                    $alert.find("strong").text("Error ! ");
+                    $alert.find("strong").text("Oops ! ");
                     $alert.find("span").text("Invalid Username Or Password");
-                    $alert.slideDown("slow").delay(3000).slideUp("slow");
+                    $alert.slideDown("slow").delay(5000).slideUp("slow");
+                    $('#userpassword').val("");
+                }
+                else
+                if (result == "$") {
+                    var $alert = $("#lg-msg");
+                    $alert.addClass("alert-danger");
+                    $alert.find("strong").text("Oops ! ");
+                    $alert.find("span").text("User Not Verified Yet");
+                    $alert.slideDown("slow").delay(5000).slideUp("slow");
                     $('#userpassword').val("");
                 }
                 else {
@@ -52,7 +74,7 @@
                 $alert.addClass("alert-danger");
                 $alert.find("strong").text("Error ! ");
                 $alert.find("span").text(err.statusText);
-                $alert.slideDown("slow").delay(3000).slideUp("slow");
+                $alert.slideDown("slow").delay(5000).slideUp("slow");
             }
         });
 
@@ -69,7 +91,7 @@
             $alert.addClass("alert-danger");
             $alert.find("strong").text("Error ! ");
             $alert.find("span").text("One or More Fields Are Empty");
-            $alert.slideDown("slow").delay(3000).slideUp("slow");
+            $alert.slideDown("slow").delay(5000).slideUp("slow");
             return false;
         }
 
@@ -87,24 +109,34 @@
                     $("#sm-msg").fadeIn("slow");
                     $('#sm-msg').delay(5000).fadeOut("slow");
                 }
+                else
+                if (result == -1) {
+                    var $alert = $("#lg-msg");
+                    $alert.removeClass("alert-success");
+                    $alert.addClass("alert-danger");
+                    $alert.find("strong").text("Oops ! ");
+                    $alert.find("span").text("Unable To Send Verification Email");
+                    $alert.slideDown("slow").delay(5000).slideUp("slow");
+                }
                 else {
                     $("#login").trigger('click');
                     $("#userlogin").val($reguserlogin);
                     var $alert = $("#lg-msg");
                     $alert.removeClass("alert-danger");
                     $alert.addClass("alert-success");
-                    $alert.find("strong").text("Well Done ! ");
-                    $alert.find("span").text("Registration Successfull");
-                    $alert.slideDown("slow").delay(3000).slideUp("slow");
+                    $alert.find("strong").text("Check Inbox ! ");
+                    $alert.find("span").text(" A Verification Email Has Sent");
+                    $alert.slideDown("slow").delay(5000).slideUp("slow");
                     $("#registerbtn").closest("div").find("input").val("");
                 }
+                return;
             },
             error: function (err) {
                 var $alert = $("#lg-msg");
                 $alert.addClass("alert-danger");
                 $alert.find("strong").text("Error ! ");
                 $alert.find("span").text(err.statusText);
-                $alert.slideDown("slow").delay(3000).slideUp("slow");
+                $alert.slideDown("slow").delay(5000).slideUp("slow");
             }
         });
 
