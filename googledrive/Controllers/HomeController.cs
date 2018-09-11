@@ -21,25 +21,29 @@ namespace GoogleDrive.Controllers
         [HttpPost]
         public ActionResult ListFolders(int Id)
         {
-            return Json(DBManager.getFoldersList(Id), JsonRequestBehavior.AllowGet);
+            int UserId = (int)Session["Id"];
+            return Json(DBManager.getFoldersList(Id, UserId), JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
         public ActionResult SearchFolders(string search)
         {
-            return Json(DBManager.searchFolders(search), JsonRequestBehavior.AllowGet);
+            int UserId = (int)Session["Id"];
+            return Json(DBManager.searchFolders(search, UserId), JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
         public ActionResult SearchFiles(string search)
         {
-            return Json(DBManager.searchFiles(search), JsonRequestBehavior.AllowGet);
+            int UserId = (int)Session["Id"];
+            return Json(DBManager.searchFiles(search, UserId), JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
         public ActionResult ListFiles(int Id)
         {
-            return Json(DBManager.getFilesList(Id), JsonRequestBehavior.AllowGet);
+            int UserId = (int)Session["Id"];
+            return Json(DBManager.getFilesList(Id, UserId), JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]

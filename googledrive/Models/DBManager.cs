@@ -41,7 +41,7 @@ namespace GoogleDrive.Models
             }
         }
 
-        public static List<FolderDTO> getFoldersList(int Id)
+        public static List<FolderDTO> getFoldersList(int Id, int UserId)
         {
             string connString = @"Data Source=localhost;Initial Catalog=GoogleDrive;User ID=sa;Password=123";
             using (SqlConnection conn = new SqlConnection(connString))
@@ -58,7 +58,7 @@ namespace GoogleDrive.Models
                 command.Parameters.Add(param);
                 command.ExecuteNonQuery();
 
-                query = string.Format(@"select * from Folders where ParentFolderId = @parent");
+                query = string.Format(@"select * from Folders where ParentFolderId = @parent AND CreatedBy = @UserId");
                 command = new SqlCommand(query, conn);
                 param = new SqlParameter
                 {
@@ -67,6 +67,15 @@ namespace GoogleDrive.Models
                     Value = Id
                 };
                 command.Parameters.Add(param);
+
+                param = new SqlParameter
+                {
+                    ParameterName = "UserId",
+                    SqlDbType = System.Data.SqlDbType.VarChar,
+                    Value = UserId
+                };
+                command.Parameters.Add(param);
+
                 SqlDataReader reader = command.ExecuteReader();
                 List<FolderDTO> folders = new List<FolderDTO>();
                 while (reader.Read())
@@ -84,13 +93,13 @@ namespace GoogleDrive.Models
             }
         }
 
-        public static List<FolderDTO> searchFolders(string search)
+        public static List<FolderDTO> searchFolders(string search, int UserId)
         {
             string connString = @"Data Source=localhost;Initial Catalog=GoogleDrive;User ID=sa;Password=123";
             using (SqlConnection conn = new SqlConnection(connString))
             {
                 conn.Open();
-                string query = string.Format(@"select * from Folders where Name like '%' + @Search + '%'");
+                string query = string.Format(@"select * from Folders where Name like '%' + @Search + '%' AND CreatedBy = @UserId");
                 SqlCommand command = new SqlCommand(query, conn);
                 SqlParameter param = new SqlParameter
                 {
@@ -99,6 +108,15 @@ namespace GoogleDrive.Models
                     Value = search
                 };
                 command.Parameters.Add(param);
+
+                param = new SqlParameter
+                {
+                    ParameterName = "UserId",
+                    SqlDbType = System.Data.SqlDbType.VarChar,
+                    Value = UserId
+                };
+                command.Parameters.Add(param);
+
                 SqlDataReader reader = command.ExecuteReader();
                 List<FolderDTO> folders = new List<FolderDTO>();
                 while (reader.Read())
@@ -116,19 +134,27 @@ namespace GoogleDrive.Models
             }
         }
 
-        public static List<FileDTO> searchFiles(string search)
+        public static List<FileDTO> searchFiles(string search, int UserId)
         {
             string connString = @"Data Source=localhost;Initial Catalog=GoogleDrive;User ID=sa;Password=123";
             using (SqlConnection conn = new SqlConnection(connString))
             {
                 conn.Open();
-                string query = string.Format(@"select * from Files where Name like '%' + @Search + '%'");
+                string query = string.Format(@"select * from Files where Name like '%' + @Search + '%' AND CreatedBy = @UserId");
                 SqlCommand command = new SqlCommand(query, conn);
                 SqlParameter param = new SqlParameter
                 {
                     ParameterName = "Search",
                     SqlDbType = System.Data.SqlDbType.VarChar,
                     Value = search
+                };
+                command.Parameters.Add(param);
+
+                param = new SqlParameter
+                {
+                    ParameterName = "UserId",
+                    SqlDbType = System.Data.SqlDbType.VarChar,
+                    Value = UserId
                 };
                 command.Parameters.Add(param);
 
@@ -150,13 +176,13 @@ namespace GoogleDrive.Models
             }
         }
 
-        public static List<FileDTO> getFilesList(int Id)
+        public static List<FileDTO> getFilesList(int Id, int UserId)
         {
             string connString = @"Data Source=localhost;Initial Catalog=GoogleDrive;User ID=sa;Password=123";
             using (SqlConnection conn = new SqlConnection(connString))
             {
                 conn.Open();
-                string query = string.Format(@"select * from Files where ParentFolderId = @parent");
+                string query = string.Format(@"select * from Files where ParentFolderId = @parent AND CreatedBy = @UserId");
                 SqlCommand command = new SqlCommand(query, conn);
                 SqlParameter param = new SqlParameter
                 {
@@ -165,6 +191,15 @@ namespace GoogleDrive.Models
                     Value = Id
                 };
                 command.Parameters.Add(param);
+
+                param = new SqlParameter
+                {
+                    ParameterName = "UserId",
+                    SqlDbType = System.Data.SqlDbType.VarChar,
+                    Value = UserId
+                };
+                command.Parameters.Add(param);
+
                 SqlDataReader reader = command.ExecuteReader();
                 List<FileDTO> files = new List<FileDTO>();
                 while (reader.Read())
@@ -221,7 +256,7 @@ namespace GoogleDrive.Models
                 command.Parameters.Add(param);
                 command.ExecuteNonQuery();
 
-                query = string.Format(@"select count(*) from Folders where Name = @Name AND ParentFolderId = @ParentFolderId");
+                query = string.Format(@"select count(*) from Folders where Name = @Name AND ParentFolderId = @ParentFolderId AND CreatedBy = @CreatedBy");
                 command = new SqlCommand(query, conn);
                 param = new SqlParameter
                 {
@@ -238,6 +273,15 @@ namespace GoogleDrive.Models
                     Value = dto.ParentFolderId
                 };
                 command.Parameters.Add(param);
+
+                param = new SqlParameter
+                {
+                    ParameterName = "CreatedBy",
+                    SqlDbType = System.Data.SqlDbType.Int,
+                    Value = dto.CreatedBy
+                };
+                command.Parameters.Add(param);
+
                 SqlDataReader reader = command.ExecuteReader();
                 reader.Read();
                 if(reader.GetInt32(0) > 0)
@@ -375,7 +419,7 @@ namespace GoogleDrive.Models
             using (SqlConnection conn = new SqlConnection(connString))
             {
                 conn.Open();
-                string query = string.Format(@"delete from Folders where Id = @Id OR ParentFolderId = @Id; delete from Files where Id = @Id");
+                string query = string.Format(@"delete from Folders where Id = @Id OR ParentFolderId = @Id; delete from Files where ParentFolderId = @Id");
                 SqlCommand command = new SqlCommand(query, conn);
 
                 SqlParameter param = new SqlParameter
@@ -511,7 +555,7 @@ namespace GoogleDrive.Models
                 foreach (var dto in dtos)
                 {
                     result++;
-                    string query = string.Format(@"select count(*) from Files where Name = @Name AND ParentFolderId = @ParentFolderId AND FileExt = @FileExt AND FileSizeInKB = @FileSizeInKB");
+                    string query = string.Format(@"select count(*) from Files where Name = @Name AND ParentFolderId = @ParentFolderId AND FileExt = @FileExt AND FileSizeInKB = @FileSizeInKB AND CreatedBy = @CreatedBy");
                     SqlCommand command = new SqlCommand(query, conn);
 
                     SqlParameter param = new SqlParameter
@@ -540,6 +584,13 @@ namespace GoogleDrive.Models
                         ParameterName = "FileSizeInKB",
                         SqlDbType = System.Data.SqlDbType.Int,
                         Value = dto.FileSizeInKB
+                    };
+                    command.Parameters.Add(param);
+                    param = new SqlParameter
+                    {
+                        ParameterName = "CreatedBy",
+                        SqlDbType = System.Data.SqlDbType.Int,
+                        Value = dto.CreatedBy
                     };
                     command.Parameters.Add(param);
                     SqlDataReader reader = command.ExecuteReader();

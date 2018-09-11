@@ -28,6 +28,8 @@ namespace GoogleDrive.Controllers
             {
                 Session["Username"] = username;
                 Session["Login"] = dto.Login;
+                Session["Id"] = DBManager.getUserIdByLogin(dto.Login);
+                
             }
             return Json(username, JsonRequestBehavior.AllowGet);
         }
