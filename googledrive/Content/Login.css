@@ -62,7 +62,19 @@
     text-decoration: none;
 }
 
+a:hover {
+    text-decoration: underline !important;
+}
+
 .form .register-form {
+    display: none;
+}
+
+.form .forgetpassword-form{
+    display: none;
+}
+
+.form .resetpassword-form{
     display: none;
 }
 

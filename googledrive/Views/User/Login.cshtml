@@ -14,7 +14,7 @@
             <input type="text" name="userlogin" id="regusername" placeholder="Name" />
             <input type="text" name="userlogin" id="reguserlogin" placeholder="Login" />
             <p id="sm-msg" class="sm-msg error" style="color: red;">Sorry, that login's taken. Try another?</p>
-            <input type="email" name="useremail" id="reguseremail" placeholder="Email" autocomplete="off"/>
+            <input type="email" name="useremail" id="reguseremail" placeholder="Email" autocomplete="off" />
             <input type="password" name="userpassword" id="reguserpassword" placeholder="Password" />
             <button id="registerbtn">Register</button>
             <p class="message">Already registered? <a href="#" id="login">Login</a></p>
@@ -22,8 +22,20 @@
         <div class="login-form">
             <input type="text" name="userlogin" id="userlogin" placeholder="Login" />
             <input type="password" name="userpassword" id="userpassword" placeholder="Password" />
+            <p class="message" style="margin: -14px 0 4px 0; float: right;"><a href="#" id="forgetpassword" style="font-size: 12px;">Forget Password?</a></p>
             <button id="loginbtn">Login</button>
             <p class="message">Not registered? <a href="#" id="createaccount">Register Now</a></p>
+        </div>
+        <div class="forgetpassword-form">
+            <input type="text" name="forgetlogin" id="forgetlogin" placeholder="Login" />
+            <button id="forgetpasswordbtn">Submit</button>
+            <p class="message">Remember Password? <a href="#" id="forgetloginbtn">Login</a></p>
+        </div>
+        <div class="resetpassword-form" style="display: none;">
+            <input type="password" name="resetpassword1" id="resetpassword1" placeholder="Password" />
+            <input type="password" name="resetpassword2" id="resetpassword2" placeholder="Confirm Password" />
+            <input type="text" name="resettoken" id="resettoken" value="@TempData["Msg2"]" hidden/>
+            <button id="resetpasswordbtn">Save</button>
         </div>
     </div>
 </div>

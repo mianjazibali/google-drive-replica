@@ -63,6 +63,118 @@ namespace GoogleDrive.Models
             }
         }
 
+        public static int forgetPassword(UserDTO user)
+        {
+            string connString = @"Data Source=localhost;Initial Catalog=GoogleDrive;User ID=sa;Password=123";
+            using (SqlConnection conn = new SqlConnection(connString))
+            {
+                conn.Open();
+                string query = string.Format(@"select count(*) from Users where Login = @Login");
+                SqlCommand command = new SqlCommand(query, conn);
+                SqlParameter param = new SqlParameter
+                {
+                    ParameterName = "Login",
+                    SqlDbType = System.Data.SqlDbType.VarChar,
+                    Value = user.Login
+                };
+                command.Parameters.Add(param);
+                SqlDataReader reader = command.ExecuteReader();
+                reader.Read();
+                if (reader.GetInt32(0) == 0)
+                {
+                    reader.Close();
+                    return 0;
+                }
+                reader.Close();
+                string token = Guid.NewGuid().ToString();
+                /*
+                try
+                {
+                    MailMessage mail = new MailMessage("m.mianjazibali@gmail.com", user.Email);
+                    SmtpClient client = new SmtpClient();
+                    client.Port = 25;
+                    client.DeliveryMethod = SmtpDeliveryMethod.Network;
+                    client.UseDefaultCredentials = false;
+                    client.Host = "smtp.gmail.com";
+                    mail.Subject = "User Verification";
+                    mail.Body = HttpContext.Current.Server.MapPath("~/User/ResetPassword/") + token;
+                    client.Send(mail);
+                }
+                catch (Exception)
+                {
+                    return -1;
+                }
+                */
+                query = string.Format("update Users set TokenPassword = @Token where Login = @Login");
+                command = new SqlCommand(query, conn);
+                param = new SqlParameter
+                {
+                    ParameterName = "Token",
+                    SqlDbType = System.Data.SqlDbType.VarChar,
+                    Value = token
+                };
+                command.Parameters.Add(param);
+                param = new SqlParameter
+                {
+                    ParameterName = "Login",
+                    SqlDbType = System.Data.SqlDbType.VarChar,
+                    Value = user.Login
+                };
+                command.Parameters.Add(param);
+                int result = command.ExecuteNonQuery();
+                return result;
+            }
+        }
+
+        public static int resetPassword(string token)
+        {
+            string connString = @"Data Source=localhost;Initial Catalog=GoogleDrive;User ID=sa;Password=123";
+            using (SqlConnection conn = new SqlConnection(connString))
+            {
+                conn.Open();
+                string query = string.Format("select Count(*) from Users where TokenPassword = @token");
+                SqlCommand command = new SqlCommand(query, conn);
+                SqlParameter param = new SqlParameter
+                {
+                    ParameterName = "token",
+                    SqlDbType = System.Data.SqlDbType.VarChar,
+                    Value = token
+                };
+                command.Parameters.Add(param);
+                SqlDataReader reader = command.ExecuteReader();
+                reader.Read();
+                int result = reader.GetInt32(0);
+                return result;
+            }
+        }
+
+        public static int resetPassword(UserDTO dto)
+        {
+            string connString = @"Data Source=localhost;Initial Catalog=GoogleDrive;User ID=sa;Password=123";
+            using (SqlConnection conn = new SqlConnection(connString))
+            {
+                conn.Open();
+                string query = string.Format("update Users set Password = @Password, TokenPassword = 'NULL' where TokenPassword = @Token");
+                SqlCommand command = new SqlCommand(query, conn);
+                SqlParameter param = new SqlParameter
+                {
+                    ParameterName = "Password",
+                    SqlDbType = System.Data.SqlDbType.VarChar,
+                    Value = dto.Password
+                };
+                command.Parameters.Add(param);
+                param = new SqlParameter
+                {
+                    ParameterName = "Token",
+                    SqlDbType = System.Data.SqlDbType.VarChar,
+                    Value = dto.TokenPassword
+                };
+                command.Parameters.Add(param);
+                int result = command.ExecuteNonQuery();
+                return result;
+            }
+        }
+
         public static int verifyUser(string token)
         {
             string connString = @"Data Source=localhost;Initial Catalog=GoogleDrive;User ID=sa;Password=123";

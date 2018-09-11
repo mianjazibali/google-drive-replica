@@ -13,5 +13,6 @@ namespace GoogleDrive.Models
         public string Password { set; get; }
         public string Email { set; get; }
         public string Token { set; get; }
+        public string TokenPassword { set; get; }
     }
 }

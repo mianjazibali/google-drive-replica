@@ -50,6 +50,35 @@ namespace GoogleDrive.Controllers
             return Redirect("~/User/Login");
         }
 
+        [HttpGet]
+        public ActionResult ResetPassword(string id)
+        {
+            int result = DBManager.resetPassword(id);
+            if (result == 0)
+            {
+                TempData["Msg1"] = "Oops !";
+                TempData["Msg2"] = " Invalid Link";
+            }
+            else
+            {
+                TempData["Msg1"] = "Reset";
+                TempData["Msg2"] = id;
+            }
+            return Redirect("~/User/Login");
+        }
+
+        [HttpPost]
+        public JsonResult ResetPassword(UserDTO dto)
+        {
+            return Json(DBManager.resetPassword(dto), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult ForgetPassword(UserDTO dto)
+        {
+            return Json(DBManager.forgetPassword(dto), JsonRequestBehavior.AllowGet);
+        }
+
         [HttpPost]
         public JsonResult RegisterUser(UserDTO dto)
         {
