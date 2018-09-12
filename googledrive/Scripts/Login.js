@@ -19,10 +19,12 @@
     }
 
     $("#resetpasswordbtn").click(function () {
+        $("#loadericon").show();
         var $password1 = $("#resetpassword1").val();
         var $password2 = $("#resetpassword2").val();
         var $token = $("#resettoken").val();
         if ((!$password1) || (!$password2) || (!$token)) {
+            $("#loadericon").hide();
             var $alert = $("#lg-msg");
             $alert.addClass("alert-danger");
             $alert.find("strong").text("Error ! ");
@@ -31,6 +33,7 @@
             return false;
         }
         if ($password1 != $password2) {
+            $("#loadericon").hide();
             var $alert = $("#lg-msg");
             $alert.addClass("alert-danger");
             $alert.find("strong").text("Oops ! ");
@@ -47,6 +50,7 @@
             contentType: "application/json",
             processdata: false,
             success: function (result) {
+                $("#loadericon").hide();
                 //$("#forgetloginbtn").trigger('click');
                 $(".resetpassword-form").slideUp("slow");
                 $(".login-form").slideDown("slow");
@@ -71,6 +75,7 @@
                 return;
             },
             error: function (err) {
+                $("#loadericon").hide();
                 var $alert = $("#lg-msg");
                 $alert.addClass("alert-danger");
                 $alert.find("strong").text("Error ! ");
@@ -94,6 +99,7 @@
     });
 
     $("#forgetpasswordbtn").click(function () {
+        $("#loadericon").show();
         var $login = $("#forgetlogin").val();
         var $data = ({ 'Login': $login });
         $.ajax({
@@ -104,6 +110,7 @@
             contentType: "application/json",
             processdata: false,
             success: function (result) {
+                $("#loadericon").hide();
                 $("#forgetloginbtn").trigger('click');
                 if (result == 0) {
                     var $alert = $("#lg-msg");
@@ -133,6 +140,7 @@
                 return;
             },
             error: function (err) {
+                $("#loadericon").hide();
                 var $alert = $("#lg-msg");
                 $alert.addClass("alert-danger");
                 $alert.find("strong").text("Error ! ");
@@ -155,10 +163,12 @@
     });
     
     $("#loginbtn").click(function () {
+        $("#loadericon").show();
         var $userlogin = $("#userlogin").val();
         var $userpassword = $("#userpassword").val();
 
         if ((!$userlogin) || (!$userpassword)) {
+            $("#loadericon").hide();
             var $alert = $("#lg-msg");
             $alert.addClass("alert-danger");
             $alert.find("strong").text("Error ! ");
@@ -177,6 +187,7 @@
             contentType: "application/json",
             processdata: false,
             success: function (result) {
+                $("#loadericon").hide();
                 if (result == "") {
                     var $alert = $("#lg-msg");
                     $alert.addClass("alert-danger");
@@ -199,6 +210,7 @@
                 }
             },
             error: function () {
+                $("#loadericon").hide();
                 var $alert = $("#lg-msg");
                 $alert.addClass("alert-danger");
                 $alert.find("strong").text("Error ! ");
@@ -210,12 +222,14 @@
     });
 
     $("#registerbtn").click(function () {
+        $("#loadericon").show();
         var $regusername = $("#regusername").val();
         var $reguserlogin = $("#reguserlogin").val();
         var $reguseremail = $("#reguseremail").val();
         var $reguserpassword = $("#reguserpassword").val();
 
         if ((!$regusername) || (!$reguserlogin) || (!$reguseremail) || (!$reguserpassword)) {
+            $("#loadericon").hide();
             var $alert = $("#lg-msg");
             $alert.addClass("alert-danger");
             $alert.find("strong").text("Error ! ");
@@ -234,6 +248,7 @@
             contentType: "application/json",
             processdata: false,
             success: function (result) {
+                $("#loadericon").hide();
                 if (result == 0) {
                     $("#sm-msg").fadeIn("slow");
                     $('#sm-msg').delay(5000).fadeOut("slow");
@@ -261,6 +276,7 @@
                 return;
             },
             error: function (err) {
+                $("#loadericon").hide();
                 var $alert = $("#lg-msg");
                 $alert.addClass("alert-danger");
                 $alert.find("strong").text("Error ! ");

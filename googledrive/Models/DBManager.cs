@@ -90,8 +90,8 @@ namespace GoogleDrive.Models
                 reader.Close();
 
                 string token = Guid.NewGuid().ToString();
-                /*
-                string url = "http://" + HttpContext.Current.Request.Url.Authority + "/User/ForgetPassword/" + token;
+                
+                string url = "http://" + HttpContext.Current.Request.Url.Authority + "/User/ResetPassword/" + token;
                 try
                 {
                     SmtpClient smtp = new SmtpClient();
@@ -113,7 +113,7 @@ namespace GoogleDrive.Models
                 {
                     return -1;
                 }
-                */
+                
                 query = string.Format("update Users set TokenPassword = @Token where Login = @Login");
                 command = new SqlCommand(query, conn);
                 param = new SqlParameter
@@ -260,7 +260,7 @@ namespace GoogleDrive.Models
                     int result = command.ExecuteNonQuery();
                     if(result > 0)
                     {
-                        /*
+                        
                         string url = "http://" + HttpContext.Current.Request.Url.Authority + "/Download/File/" + token;
                         try
                         {
@@ -281,9 +281,9 @@ namespace GoogleDrive.Models
                         }
                         catch (Exception)
                         {
-                            return -1;
+                            return "Error";
                         }
-                        */
+                        
                         return token;
                     }
                     else
@@ -727,7 +727,7 @@ namespace GoogleDrive.Models
                 }
                 reader.Close();
                 dto.Token = Guid.NewGuid().ToString();
-                /*
+                
                 string url = "http://" + HttpContext.Current.Request.Url.Authority + "/User/Verify/" + dto.Token;
                 try
                 {
@@ -750,7 +750,7 @@ namespace GoogleDrive.Models
                 {
                     return -1;
                 }
-                */
+                
                 query = string.Format(@"insert into Users(Name,Login,Email,Password,Token,CreatedOn) values(@Name,@Login,@Email,@Password,@Token,@CreatedOn)");
                 command = new SqlCommand(query, conn);
 

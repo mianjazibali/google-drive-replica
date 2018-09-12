@@ -299,7 +299,8 @@
                     $("#suserlogin").val("");
                     $("#specificshare").slideDown("slow").delay(8000).slideUp("slow");
                     $("#sharebtn").click(function () {
-                        $(this).closest('div').slideUp("slow");
+                        $(this).closest('div').hide();
+                        $("#spinner").show();
                         var $id = $("#sfileid").val();
                         var $login = $("#suserlogin").val();
                         var $data = ({ 'Id': $id, 'Login': $login });
@@ -313,6 +314,7 @@
                             processdata: false,
                             success: function (result) {
                                 console.log(result);
+                                $("#spinner").hide();
                                 if (result == "UserNotFound") {
                                     var $alert = $("#lg-msg");
                                     $alert.removeClass("alert-success");
