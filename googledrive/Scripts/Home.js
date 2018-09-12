@@ -2,55 +2,16 @@
     LoadFolders();
     CreateBreadCrumbs("Home", 0);
 
-    $("#sharebtn").click(function () {
-        $(this).closest('div').slideUp("slow");
-        var $id = $("#sfileid").val();
-        var $login = $("#suserlogin").val();
-        var $data = ({ 'Id': $id, 'Login': $login });
-
-        $.ajax({
-            type: 'POST',
-            dataType: 'JSON',
-            url: '/Home/GenerateSpecificFileToken',
-            data: JSON.stringify($data),
-            contentType: "application/json",
-            processdata: false,
-            success: function (result) {
-                console.log(result);
-                if (result == "UserNotFound") {
-                    var $alert = $("#lg-msg");
-                    $alert.removeClass("alert-success");
-                    $alert.addClass("alert-danger");
-                    $alert.find("strong").text("Oops ! ");
-                    $alert.find("span").text("User Not Found");
-                    $alert.fadeIn("slow").delay(5000).slideUp("slow");
-                }
-                else
-                if (result == "FileNotFound") {
-                    var $alert = $("#lg-msg");
-                    $alert.removeClass("alert-success");
-                    $alert.addClass("alert-danger");
-                    $alert.find("strong").text("Oops ! ");
-                    $alert.find("span").text("File Not Found");
-                    $alert.fadeIn("slow").delay(5000).slideUp("slow");
-                }
-                else {
-                    var $alert = $("#lg-msg");
-                    $alert.removeClass("alert-danger");
-                    $alert.addClass("alert-success");
-                    $alert.find("strong").text("Success ! ");
-                    $alert.find("span").text("A Download Link Is Sent To " + $login);
-                    $alert.fadeIn("slow").delay(5000).slideUp("slow");
-                }
-            },
-            error: function (err) {
-                var $alert = $("#lg-msg");
-                $alert.addClass("alert-danger");
-                $alert.find("strong").text("Error ! ");
-                $alert.find("span").text(err.statusText);
-                $alert.fadeIn("slow").delay(5000).slideUp("slow");
-            }
-        });
+    $("#copyclipboardbtn").click(function () {
+        var copyText = document.getElementById("copyclipboard");
+        copyText.select();
+        document.execCommand("copy");
+        var $alert = $("#lg-msg");
+        $alert.addClass("alert-success");
+        $alert.find("strong").text("Success ! ");
+        $alert.find("span").text("Link Copied To Clipboard");
+        $alert.fadeIn("slow").delay(5000).slideUp("slow");
+        $(this).hide("slow");
     });
 
     $("#searchinput").keyup(function () {
@@ -312,6 +273,9 @@
                         processData: false,
                         success: function (result) {
                             console.log(result);
+                            result = window.location.origin + "/Download/File/" + result;
+                            $("#copyclipboard").val(result);
+                            $("#copyclipboardbtn").show("slow");
                             var $td = $tr.find(':nth-child(3)');
                             $td.empty();
                             var $font = $('<i>');
@@ -333,7 +297,65 @@
                     var $id = $tr.find(':nth-child(1)').text();
                     $("#sfileid").val($id);
                     $("#suserlogin").val("");
-                    $("#specificshare").slideDown("slow").delay(10000).slideUp("slow");
+                    $("#specificshare").slideDown("slow").delay(8000).slideUp("slow");
+                    $("#sharebtn").click(function () {
+                        $(this).closest('div').slideUp("slow");
+                        var $id = $("#sfileid").val();
+                        var $login = $("#suserlogin").val();
+                        var $data = ({ 'Id': $id, 'Login': $login });
+
+                        $.ajax({
+                            type: 'POST',
+                            dataType: 'JSON',
+                            url: '/Home/GenerateSpecificFileToken',
+                            data: JSON.stringify($data),
+                            contentType: "application/json",
+                            processdata: false,
+                            success: function (result) {
+                                console.log(result);
+                                if (result == "UserNotFound") {
+                                    var $alert = $("#lg-msg");
+                                    $alert.removeClass("alert-success");
+                                    $alert.addClass("alert-danger");
+                                    $alert.find("strong").text("Oops ! ");
+                                    $alert.find("span").text("User Not Found");
+                                    $alert.fadeIn("slow").delay(5000).slideUp("slow");
+                                }
+                                else
+                                if (result == "FileNotFound") {
+                                    var $alert = $("#lg-msg");
+                                    $alert.removeClass("alert-success");
+                                    $alert.addClass("alert-danger");
+                                    $alert.find("strong").text("Oops ! ");
+                                    $alert.find("span").text("File Not Found");
+                                    $alert.fadeIn("slow").delay(5000).slideUp("slow");
+                                }
+                                else {
+                                    var $td = $tr.find(':nth-child(3)');
+                                    $td.empty();
+                                    var $font = $('<i>');
+                                    $font.attr({ class: "fa fa-chain", style: "color: #428BCA" });
+                                    $td.append($font);
+                                    $font = $('<i>');
+                                    $font.attr({ class: "fa fa-user", style: "color: #428BCA" });
+                                    $td.append($font);
+                                    var $alert = $("#lg-msg");
+                                    $alert.removeClass("alert-danger");
+                                    $alert.addClass("alert-success");
+                                    $alert.find("strong").text("Success ! ");
+                                    $alert.find("span").text("A Download Link Is Sent To " + $login);
+                                    $alert.fadeIn("slow").delay(5000).slideUp("slow");
+                                }
+                            },
+                            error: function (err) {
+                                var $alert = $("#lg-msg");
+                                $alert.addClass("alert-danger");
+                                $alert.find("strong").text("Error ! ");
+                                $alert.find("span").text(err.statusText);
+                                $alert.fadeIn("slow").delay(5000).slideUp("slow");
+                            }
+                        });
+                    });
                     return false;
                 }
             },

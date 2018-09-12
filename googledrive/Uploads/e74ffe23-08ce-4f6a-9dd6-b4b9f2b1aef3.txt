@@ -1,0 +1,6 @@
+First boot Windows in Thawed mode.
+Copy somewhere Persi0.sys from root.
+Patch that copy and replace with original in root.
+Restart Windows.
+Note: for replacing (copy/delete/rename) use tool like PC Hunter.
+
