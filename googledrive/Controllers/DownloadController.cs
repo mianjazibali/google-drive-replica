@@ -29,6 +29,14 @@ namespace googledrive.Controllers
             }
             else
             if ((dto.UniqueName != null) && (dto.Share != null)){
+                if((string)Session["Login"] == dto.Share)
+                {
+                    ViewData["Name"] = dto.Name;
+                    ViewData["FileExt"] = dto.FileExt;
+                    ViewData["FileSizeInKB"] = dto.FileSizeInKB;
+                    ViewData["File"] = dto.UniqueName + dto.FileExt;
+                    return View();
+                }
                 ViewBag.Msg = "Access Denied";
                 return View("NotExist");
             }

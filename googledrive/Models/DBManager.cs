@@ -211,6 +211,93 @@ namespace GoogleDrive.Models
             }
         }
 
+        public static string generateSpecificFileToken(int Id, string Login)
+        {
+            string connString = @"Data Source=localhost;Initial Catalog=GoogleDrive;User ID=sa;Password=123";
+            using (SqlConnection conn = new SqlConnection(connString))
+            {
+                conn.Open();
+                string query = string.Format("select Email from Users where Login = @Login");
+                SqlCommand command = new SqlCommand(query, conn);
+                SqlParameter param = new SqlParameter
+                {
+                    ParameterName = "Login",
+                    SqlDbType = System.Data.SqlDbType.VarChar,
+                    Value = Login
+                };
+                command.Parameters.Add(param);
+                SqlDataReader reader = command.ExecuteReader();
+                string Email = "";
+                if (reader.Read()){
+                    Email = reader.GetString(0);
+                }
+                if (Email != ""){
+                    reader.Close();
+                    string token = Guid.NewGuid().ToString();
+                    query = string.Format("update Files set Token = @Token, Share = @Share where Id = @Id");
+                    command = new SqlCommand(query, conn);
+                    param = new SqlParameter
+                    {
+                        ParameterName = "Token",
+                        SqlDbType = System.Data.SqlDbType.VarChar,
+                        Value = token
+                    };
+                    command.Parameters.Add(param);
+                    param = new SqlParameter
+                    {
+                        ParameterName = "Share",
+                        SqlDbType = System.Data.SqlDbType.VarChar,
+                        Value = Login
+                    };
+                    command.Parameters.Add(param);
+                    param = new SqlParameter
+                    {
+                        ParameterName = "Id",
+                        SqlDbType = System.Data.SqlDbType.Int,
+                        Value = Id
+                    };
+                    command.Parameters.Add(param);
+                    int result = command.ExecuteNonQuery();
+                    if(result > 0)
+                    {
+                        /*
+                        string url = "http://" + HttpContext.Current.Request.Url.Authority + "/Download/File/" + token;
+                        try
+                        {
+                            SmtpClient smtp = new SmtpClient();
+                            smtp.Host = "smtp.gmail.com";
+                            smtp.Port = 587;
+                            smtp.EnableSsl = true;
+                            smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+                            smtp.UseDefaultCredentials = false;
+                            smtp.Credentials = new NetworkCredential("m.mianjazibali@gmail.com", "3g9&2C67rupp6TE@0T6e");
+
+                            using (var message = new MailMessage("m.mianjazibali@gmail.com",Email))
+                            {
+                                message.Subject = "File Sharing";
+                                message.Body = url; 
+                                smtp.Send(message);
+                            }
+                        }
+                        catch (Exception)
+                        {
+                            return -1;
+                        }
+                        */
+                        return token;
+                    }
+                    else
+                    {
+                        return "FileNotFound";
+                    }
+                }
+                else
+                {
+                    return "UserNotFound";
+                }
+            }
+        }
+
         public static FileDTO getFile(string token)
         {
             string connString = @"Data Source=localhost;Initial Catalog=GoogleDrive;User ID=sa;Password=123";
