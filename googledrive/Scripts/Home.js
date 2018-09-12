@@ -103,15 +103,21 @@
             sp.text(result[i].Name + result[i].FileExt);
             td.append(sp);
             tr.append(td);
+            //Share Icon
+            td = $('<td>');
+            if (result[i].Token != null) {
+                var font = $('<i>');
+                font.addClass('fa fa-chain');
+                font.attr({ style: 'color: #428BCA' });
+                td.append(font);
+            }
+            tr.append(td);
             td = $('<td>');
             td.text(result[i].FileExt);
             td.attr({ style: 'display : none;' });
             tr.append(td);
             td = $('<td>');
             td.text(result[i].FileSizeInKB + " KB");
-            tr.append(td);
-            td = $('<td>');
-            td.text(result[i].CreatedBy);
             tr.append(td);
             td = $('<td>');
             td.text(result[i].UploadedOn);
@@ -240,7 +246,8 @@
                 }
                 else
                 if (key == "Public") {
-                    var $id = $(this).find(':nth-child(1)').text();
+                    var $tr = $(this);
+                    var $id = $tr.find(':nth-child(1)').text();
                     $.ajax({
                         type: "POST",
                         url: '/Home/GenerateFileToken/' + $id,
@@ -248,6 +255,11 @@
                         processData: false,
                         success: function (result) {
                             console.log(result);
+                            var $td = $tr.find(':nth-child(3)');
+                            $td.empty();
+                            var $font = $('<i>');
+                            $font.attr({ class: "fa fa-chain", style: "color: #428BCA" });
+                            $td.append($font);
                         },
                         error: function (err) {
                             var $alert = $("#lg-msg");
@@ -393,6 +405,15 @@
                     var sp = $('<span>');
                     sp.text(result[i].Name + result[i].FileExt)
                     td.append(sp);
+                    tr.append(td);
+                    //Share Icon
+                    td = $('<td>');
+                    if (result[i].Token != null) {
+                        var font = $('<i>');
+                        font.addClass('fa fa-chain');
+                        font.attr({ style: 'color: #428BCA' });
+                        td.append(font);
+                    }
                     tr.append(td);
                     td = $('<td>');
                     td.text(result[i].FileExt);

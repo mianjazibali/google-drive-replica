@@ -22,15 +22,24 @@ namespace googledrive.Controllers
                 return Redirect("~/User/Login");
             }
             FileDTO dto = DBManager.getFile(id);
-            if ((dto.UniqueName == null) || (dto.UniqueName == ""))
+            if ((dto.UniqueName == null) && (dto.Share == null))
             {
+                ViewBag.Msg = "File Not Found";
                 return View("NotExist");
             }
-            ViewData["Name"] = dto.Name;
-            ViewData["FileExt"] = dto.FileExt;
-            ViewData["FileSizeInKB"] = dto.FileSizeInKB;
-            ViewData["File"] = dto.UniqueName + dto.FileExt;
-            return View();
+            else
+            if ((dto.UniqueName != null) && (dto.Share != null)){
+                ViewBag.Msg = "Access Denied";
+                return View("NotExist");
+            }
+            else
+            {
+                ViewData["Name"] = dto.Name;
+                ViewData["FileExt"] = dto.FileExt;
+                ViewData["FileSizeInKB"] = dto.FileSizeInKB;
+                ViewData["File"] = dto.UniqueName + dto.FileExt;
+                return View();
+            } 
         }
     }
 }

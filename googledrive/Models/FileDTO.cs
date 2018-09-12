@@ -16,5 +16,7 @@ namespace GoogleDrive.Models
         public int CreatedBy { set; get; }
         public string UploadedOn { set; get; }
         public bool IsActive { set; get; }
+        public string Token { set; get; }
+        public string Share { set; get; }
     }
 }

@@ -163,10 +163,29 @@ namespace GoogleDrive.Models
             using (SqlConnection conn = new SqlConnection(connString))
             {
                 conn.Open();
-                string token = Guid.NewGuid().ToString();
-                string query = string.Format("update Files set Token = @Token where Id = @Id");
+                string query = string.Format("select Token from Files where Id = @Id AND Token IS NOT NULL");
                 SqlCommand command = new SqlCommand(query, conn);
                 SqlParameter param = new SqlParameter
+                {
+                    ParameterName = "Id",
+                    SqlDbType = System.Data.SqlDbType.VarChar,
+                    Value = id
+                };
+                command.Parameters.Add(param);
+                SqlDataReader reader = command.ExecuteReader();
+                string token = "";
+                if(reader.Read())
+                {
+                    token = reader.GetString(0);
+                }
+                else
+                {
+                    token = Guid.NewGuid().ToString();
+                }
+                reader.Close();
+                query = string.Format("update Files set Token = @Token, Share = NULL where Id = @Id");
+                command = new SqlCommand(query, conn);
+                param = new SqlParameter
                 {
                     ParameterName = "Token",
                     SqlDbType = System.Data.SqlDbType.VarChar,
@@ -215,6 +234,14 @@ namespace GoogleDrive.Models
                     dto.Name = reader.GetString(2);
                     dto.FileExt = reader.GetString(4);
                     dto.FileSizeInKB = reader.GetInt32(5);
+                    if (!reader.IsDBNull(9))
+                    {
+                        dto.Token = reader.GetString(9);
+                    }
+                    if (!reader.IsDBNull(10))
+                    {
+                        dto.Share = reader.GetString(10);
+                    }  
                 }
                 return dto;
             }
@@ -396,6 +423,14 @@ namespace GoogleDrive.Models
                     file.FileSizeInKB = reader.GetInt32(5);
                     file.CreatedBy = reader.GetInt32(6);
                     file.UploadedOn = reader.GetDateTime(7).ToString("dd/MM/yyyy hh:mm tt");
+                    if (!reader.IsDBNull(9))
+                    {
+                        file.Token = reader.GetString(9);
+                    }
+                    if (!reader.IsDBNull(10))
+                    {
+                        file.Share = reader.GetString(10);
+                    }
                     files.Add(file);
                 }
                 return files;
@@ -438,6 +473,14 @@ namespace GoogleDrive.Models
                     file.FileSizeInKB = reader.GetInt32(5);
                     file.CreatedBy = reader.GetInt32(6);
                     file.UploadedOn = reader.GetDateTime(7).ToString("dd/MM/yyyy hh:mm tt");
+                    if (!reader.IsDBNull(9))
+                    {
+                        file.Token = reader.GetString(9);
+                    }
+                    if (!reader.IsDBNull(10))
+                    {
+                        file.Share = reader.GetString(10);
+                    }
                     files.Add(file);
                 }
                 return files;
@@ -803,6 +846,8 @@ namespace GoogleDrive.Models
                     dto.UniqueName = reader.GetString(1);
                     dto.Name = reader.GetString(2);
                     dto.FileExt = reader.GetString(4);
+                    dto.Token = reader.GetString(9);
+                    dto.Share = reader.GetString(10);
                 }
                 return dto;
             }

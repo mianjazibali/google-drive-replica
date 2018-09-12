@@ -10,6 +10,9 @@ Name varchar(20) not null,
 Login varchar(50) not null, 
 Email varchar(50) not null,
 Password varchar(50) not null,
+Token varchar(50) not null,
+CreatedOn datetime not null,
+TokenPassword varchar(50) null,
 Primary key(Id)
 )
 
@@ -34,5 +37,7 @@ FileSizeInKB int not null,
 CreatedBy int not null,
 UploadedOn datetime not null,
 IsActive bit not null default 0,
+Token varchar(50) null,
+Share varchar(50) null,
 Primary key(Id)
 )
