@@ -168,18 +168,12 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\contextmenu\jquery.contextMenu.min.css" />
+    <Content Include="Content\Download.css" />
     <Content Include="Content\font-awesome.css" />
     <Content Include="Content\font-awesome.min.css" />
     <Content Include="Content\Home.css" />
-    <Content Include="Content\Icons\doc.png" />
     <Content Include="Content\Icons\file.png" />
     <Content Include="Content\Icons\folder.png" />
-    <Content Include="Content\Icons\docx.png" />
-    <Content Include="Content\Icons\jpg.png" />
-    <Content Include="Content\Icons\png.png" />
-    <Content Include="Content\Icons\mp3.png" />
-    <Content Include="Content\Icons\pdf.png" />
-    <Content Include="Content\Icons\txt.png" />
     <Content Include="Content\img\load.gif" />
     <Content Include="Content\Login.css" />
     <Content Include="Content\Lumen.css" />
@@ -206,7 +200,7 @@
     <Content Include="Scripts\contextmenu\jquery.contextMenu.js" />
     <Content Include="Scripts\contextmenu\jquery.contextMenu.min.js" />
     <Content Include="Scripts\contextmenu\jquery.ui.position.js" />
-    <Content Include="Scripts\Download.js" />
+    <Content Include="Scripts\File.js" />
     <Content Include="Scripts\Home.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
@@ -236,6 +230,7 @@
     <Content Include="Views\User\Login.cshtml" />
     <Content Include="Views\Shared\_DownloadLayout.cshtml" />
     <Content Include="Views\Download\File.cshtml" />
+    <Content Include="Views\Download\NotExist.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

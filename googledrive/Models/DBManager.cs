@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Net;
 using System.Net.Mail;
 using System.Web;
 
@@ -69,7 +70,7 @@ namespace GoogleDrive.Models
             using (SqlConnection conn = new SqlConnection(connString))
             {
                 conn.Open();
-                string query = string.Format(@"select count(*) from Users where Login = @Login");
+                string query = string.Format(@"select Id,Email from Users where Login = @Login");
                 SqlCommand command = new SqlCommand(query, conn);
                 SqlParameter param = new SqlParameter
                 {
@@ -85,20 +86,28 @@ namespace GoogleDrive.Models
                     reader.Close();
                     return 0;
                 }
+                user.Email = reader.GetString(1);
                 reader.Close();
+
                 string token = Guid.NewGuid().ToString();
                 /*
+                string url = "http://" + HttpContext.Current.Request.Url.Authority + "/User/ForgetPassword/" + token;
                 try
                 {
-                    MailMessage mail = new MailMessage("m.mianjazibali@gmail.com", user.Email);
-                    SmtpClient client = new SmtpClient();
-                    client.Port = 25;
-                    client.DeliveryMethod = SmtpDeliveryMethod.Network;
-                    client.UseDefaultCredentials = false;
-                    client.Host = "smtp.gmail.com";
-                    mail.Subject = "User Verification";
-                    mail.Body = HttpContext.Current.Server.MapPath("~/User/ResetPassword/") + token;
-                    client.Send(mail);
+                    SmtpClient smtp = new SmtpClient();
+                    smtp.Host = "smtp.gmail.com";
+                    smtp.Port = 587;
+                    smtp.EnableSsl = true;
+                    smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+                    smtp.UseDefaultCredentials = false;
+                    smtp.Credentials = new NetworkCredential("m.mianjazibali@gmail.com", "3g9&2C67rupp6TE@0T6e");
+
+                    using (var message = new MailMessage("m.mianjazibali@gmail.com", user.Email))
+                    {
+                        message.Subject = "Reset Password";
+                        message.Body = url;
+                        smtp.Send(message);
+                    }
                 }
                 catch (Exception)
                 {
@@ -205,6 +214,7 @@ namespace GoogleDrive.Models
                     dto.UniqueName = reader.GetString(1);
                     dto.Name = reader.GetString(2);
                     dto.FileExt = reader.GetString(4);
+                    dto.FileSizeInKB = reader.GetInt32(5);
                 }
                 return dto;
             }
@@ -588,17 +598,23 @@ namespace GoogleDrive.Models
                 reader.Close();
                 dto.Token = Guid.NewGuid().ToString();
                 /*
+                string url = "http://" + HttpContext.Current.Request.Url.Authority + "/User/Verify/" + dto.Token;
                 try
                 {
-                    MailMessage mail = new MailMessage("m.mianjazibali@gmail.com", dto.Email);
-                    SmtpClient client = new SmtpClient();
-                    client.Port = 25;
-                    client.DeliveryMethod = SmtpDeliveryMethod.Network;
-                    client.UseDefaultCredentials = false;
-                    client.Host = "smtp.gmail.com";
-                    mail.Subject = "User Verification";
-                    mail.Body = HttpContext.Current.Server.MapPath("~/User/Verification/") + dto.Token;
-                    client.Send(mail);
+                    SmtpClient smtp = new SmtpClient();
+                    smtp.Host = "smtp.gmail.com";
+                    smtp.Port = 587;
+                    smtp.EnableSsl = true;
+                    smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+                    smtp.UseDefaultCredentials = false;
+                    smtp.Credentials = new NetworkCredential("m.mianjazibali@gmail.com", "3g9&2C67rupp6TE@0T6e");
+
+                    using (var message = new MailMessage("m.mianjazibali@gmail.com",dto.Email))
+                    {
+                        message.Subject = "User Verification";
+                        message.Body = url; 
+                        smtp.Send(message);
+                    }
                 }
                 catch (Exception)
                 {

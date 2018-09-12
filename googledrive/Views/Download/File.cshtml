@@ -3,7 +3,16 @@
     ViewBag.Title = "File";
     Layout = "~/Views/Shared/_DownloadLayout.cshtml";
 }
+<div class="download-page">
+    <div class="form">
+        <div class="file-image">
 
-<h2>File Downloaded</h2>
-<a id="downloadanchor" href="~/Uploads/@ViewData["file"]" download="@ViewData["Name"]" hidden></a>
+        </div>
+        <p class="filename">@ViewData["Name"]@ViewData["FileExt"]</p>
+        <p class="filesize">@ViewData["FileSizeInKB"] KB</p>
+        <a id="adownloadbtn" href="~/Uploads/@ViewData["file"]" download="@ViewData["Name"]" hidden>Download</a>
+        <button id="dummydownloadbtn">Download</button>
+    </div>
+</div>
+
 
