@@ -18,16 +18,20 @@ namespace GoogleDrive.Models
                 conn.Open();
                 string query = string.Format(@"select Name from Users where Login = @Login AND Password = @Password AND Token != 'NULL'");
                 SqlCommand command = new SqlCommand(query, conn);
-                SqlParameter param = new SqlParameter();
-                param.ParameterName = "Login";
-                param.SqlDbType = System.Data.SqlDbType.VarChar;
-                param.Value = dto.Login;
+                SqlParameter param = new SqlParameter
+                {
+                    ParameterName = "Login",
+                    SqlDbType = System.Data.SqlDbType.VarChar,
+                    Value = dto.Login
+                };
                 command.Parameters.Add(param);
 
-                param = new SqlParameter();
-                param.ParameterName = "Password";
-                param.SqlDbType = System.Data.SqlDbType.VarChar;
-                param.Value = dto.Password;
+                param = new SqlParameter
+                {
+                    ParameterName = "Password",
+                    SqlDbType = System.Data.SqlDbType.VarChar,
+                    Value = dto.Password
+                };
                 command.Parameters.Add(param);
                 command.ExecuteNonQuery();
                 SqlDataReader reader = command.ExecuteReader();
@@ -40,16 +44,20 @@ namespace GoogleDrive.Models
                 query = string.Format(@"select Name from Users where Login = @Login AND Password = @Password AND Token IS NULL");
                 command = new SqlCommand(query, conn);
 
-                param = new SqlParameter();
-                param.ParameterName = "Login";
-                param.SqlDbType = System.Data.SqlDbType.VarChar;
-                param.Value = dto.Login;
+                param = new SqlParameter
+                {
+                    ParameterName = "Login",
+                    SqlDbType = System.Data.SqlDbType.VarChar,
+                    Value = dto.Login
+                };
                 command.Parameters.Add(param);
 
-                param = new SqlParameter();
-                param.ParameterName = "Password";
-                param.SqlDbType = System.Data.SqlDbType.VarChar;
-                param.Value = dto.Password;
+                param = new SqlParameter
+                {
+                    ParameterName = "Password",
+                    SqlDbType = System.Data.SqlDbType.VarChar,
+                    Value = dto.Password
+                };
                 command.Parameters.Add(param);
 
                 reader = command.ExecuteReader();
@@ -94,13 +102,15 @@ namespace GoogleDrive.Models
                 string url = "http://" + HttpContext.Current.Request.Url.Authority + "/User/ResetPassword/" + token;
                 try
                 {
-                    SmtpClient smtp = new SmtpClient();
-                    smtp.Host = "smtp.gmail.com";
-                    smtp.Port = 587;
-                    smtp.EnableSsl = true;
-                    smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
-                    smtp.UseDefaultCredentials = false;
-                    smtp.Credentials = new NetworkCredential("m.mianjazibali@gmail.com", "3g9&2C67rupp6TE@0T6e");
+                    SmtpClient smtp = new SmtpClient
+                    {
+                        Host = "smtp.gmail.com",
+                        Port = 587,
+                        EnableSsl = true,
+                        DeliveryMethod = SmtpDeliveryMethod.Network,
+                        UseDefaultCredentials = false,
+                        Credentials = new NetworkCredential("m.mianjazibali@gmail.com", "3g9&2C67rupp6TE@0T6e")
+                    };
 
                     using (var message = new MailMessage("m.mianjazibali@gmail.com", user.Email))
                     {
@@ -363,16 +373,20 @@ namespace GoogleDrive.Models
                 string query = string.Format(@"select FileId from Shared where Token = @Token AND OwnerLogin IS NULL OR OwnerLogin = @Login");
                 SqlCommand command = new SqlCommand(query, conn);
 
-                SqlParameter param = new SqlParameter();
-                param.ParameterName = "Token";
-                param.SqlDbType = System.Data.SqlDbType.VarChar;
-                param.Value = token;
+                SqlParameter param = new SqlParameter
+                {
+                    ParameterName = "Token",
+                    SqlDbType = System.Data.SqlDbType.VarChar,
+                    Value = token
+                };
                 command.Parameters.Add(param);
 
-                param = new SqlParameter();
-                param.ParameterName = "Login";
-                param.SqlDbType = System.Data.SqlDbType.VarChar;
-                param.Value = login;
+                param = new SqlParameter
+                {
+                    ParameterName = "Login",
+                    SqlDbType = System.Data.SqlDbType.VarChar,
+                    Value = login
+                };
                 command.Parameters.Add(param);
                 SqlDataReader reader = command.ExecuteReader();
                 int Fileid = 0;
@@ -389,10 +403,12 @@ namespace GoogleDrive.Models
                 query = string.Format(@"select * from Files where Id = @Id");
                 command = new SqlCommand(query, conn);
 
-                param = new SqlParameter();
-                param.ParameterName = "Id";
-                param.SqlDbType = System.Data.SqlDbType.Int;
-                param.Value = Fileid;
+                param = new SqlParameter
+                {
+                    ParameterName = "Id",
+                    SqlDbType = System.Data.SqlDbType.Int,
+                    Value = Fileid
+                };
                 command.Parameters.Add(param);
 
                 reader = command.ExecuteReader();
@@ -454,6 +470,40 @@ namespace GoogleDrive.Models
             }
         }
 
+        public static List<UserDTO> getFileUsers(int id)
+        {
+            string connString = @"Data Source=localhost;Initial Catalog=GoogleDrive;User ID=sa;Password=123";
+            using (SqlConnection conn = new SqlConnection(connString))
+            {
+                conn.Open();
+                string query = string.Format("select OwnerLogin from Shared where FileId = @Id");
+                SqlCommand command = new SqlCommand(query, conn);
+                SqlParameter param = new SqlParameter
+                {
+                    ParameterName = "Id",
+                    SqlDbType = System.Data.SqlDbType.VarChar,
+                    Value = id
+                };
+                command.Parameters.Add(param);
+                SqlDataReader reader = command.ExecuteReader();
+                List<UserDTO> users = new List<UserDTO>();
+                string Login = "";
+                while (reader.Read())
+                {
+                    if (!reader.IsDBNull(0))
+                    {
+                        Login = reader.GetString(0);
+                        UserDTO user = new UserDTO
+                        {
+                            Login = Login
+                        };
+                        users.Add(user);
+                    } 
+                }
+                return users;
+            }
+        }
+
         public static List<FolderDTO> getFoldersList(int Id, int UserId)
         {
             string connString = @"Data Source=localhost;Initial Catalog=GoogleDrive;User ID=sa;Password=123";
@@ -493,13 +543,15 @@ namespace GoogleDrive.Models
                 List<FolderDTO> folders = new List<FolderDTO>();
                 while (reader.Read())
                 {
-                    FolderDTO folder = new FolderDTO();
-                    folder.Id = reader.GetInt32(0);
-                    folder.Name = reader.GetString(1);
-                    folder.ParentFolderId = reader.GetInt32(2);
-                    folder.CreatedBy = reader.GetInt32(3);
-                    folder.CreatedOn = reader.GetDateTime(4).ToString("dd/MM/yyyy hh:mm tt");
-                    folder.ViewCount = reader.GetInt32(6);
+                    FolderDTO folder = new FolderDTO
+                    {
+                        Id = reader.GetInt32(0),
+                        Name = reader.GetString(1),
+                        ParentFolderId = reader.GetInt32(2),
+                        CreatedBy = reader.GetInt32(3),
+                        CreatedOn = reader.GetDateTime(4).ToString("dd/MM/yyyy hh:mm tt"),
+                        ViewCount = reader.GetInt32(6)
+                    };
                     folders.Add(folder);
                 }
                 return folders;
@@ -534,13 +586,15 @@ namespace GoogleDrive.Models
                 List<FolderDTO> folders = new List<FolderDTO>();
                 while (reader.Read())
                 {
-                    FolderDTO folder = new FolderDTO();
-                    folder.Id = reader.GetInt32(0);
-                    folder.Name = reader.GetString(1);
-                    folder.ParentFolderId = reader.GetInt32(2);
-                    folder.CreatedBy = reader.GetInt32(3);
-                    folder.CreatedOn = reader.GetDateTime(4).ToString("dd/MM/yyyy hh:mm tt");
-                    folder.ViewCount = reader.GetInt32(6);
+                    FolderDTO folder = new FolderDTO
+                    {
+                        Id = reader.GetInt32(0),
+                        Name = reader.GetString(1),
+                        ParentFolderId = reader.GetInt32(2),
+                        CreatedBy = reader.GetInt32(3),
+                        CreatedOn = reader.GetDateTime(4).ToString("dd/MM/yyyy hh:mm tt"),
+                        ViewCount = reader.GetInt32(6)
+                    };
                     folders.Add(folder);
                 }
                 return folders;
@@ -575,14 +629,16 @@ namespace GoogleDrive.Models
                 List<FileDTO> files = new List<FileDTO>();
                 while (reader.Read())
                 {
-                    FileDTO file = new FileDTO();
-                    file.Id = reader.GetInt32(0);
-                    file.Name = reader.GetString(2);
-                    file.ParentFolderId = reader.GetInt32(3);
-                    file.FileExt = reader.GetString(4);
-                    file.FileSizeInKB = reader.GetInt32(5);
-                    file.CreatedBy = reader.GetInt32(6);
-                    file.UploadedOn = reader.GetDateTime(7).ToString("dd/MM/yyyy hh:mm tt");
+                    FileDTO file = new FileDTO
+                    {
+                        Id = reader.GetInt32(0),
+                        Name = reader.GetString(2),
+                        ParentFolderId = reader.GetInt32(3),
+                        FileExt = reader.GetString(4),
+                        FileSizeInKB = reader.GetInt32(5),
+                        CreatedBy = reader.GetInt32(6),
+                        UploadedOn = reader.GetDateTime(7).ToString("dd/MM/yyyy hh:mm tt")
+                    };
                     files.Add(file);
                 }
                 return files;
@@ -617,14 +673,16 @@ namespace GoogleDrive.Models
                 List<FileDTO> files = new List<FileDTO>();
                 while (reader.Read())
                 {
-                    FileDTO file = new FileDTO();
-                    file.Id = reader.GetInt32(0);
-                    file.Name = reader.GetString(2);
-                    file.ParentFolderId = reader.GetInt32(3);
-                    file.FileExt = reader.GetString(4);
-                    file.FileSizeInKB = reader.GetInt32(5);
-                    file.CreatedBy = reader.GetInt32(6);
-                    file.UploadedOn = reader.GetDateTime(7).ToString("dd/MM/yyyy hh:mm tt");
+                    FileDTO file = new FileDTO
+                    {
+                        Id = reader.GetInt32(0),
+                        Name = reader.GetString(2),
+                        ParentFolderId = reader.GetInt32(3),
+                        FileExt = reader.GetString(4),
+                        FileSizeInKB = reader.GetInt32(5),
+                        CreatedBy = reader.GetInt32(6),
+                        UploadedOn = reader.GetDateTime(7).ToString("dd/MM/yyyy hh:mm tt")
+                    };
                     files.Add(file);
                 }
                 return files;
@@ -640,10 +698,12 @@ namespace GoogleDrive.Models
                 string query = string.Format(@"select Id from Users where Login = @Login");
                 SqlCommand command = new SqlCommand(query, conn);
 
-                SqlParameter param = new SqlParameter();
-                param.ParameterName = "Login";
-                param.SqlDbType = System.Data.SqlDbType.VarChar;
-                param.Value = login;
+                SqlParameter param = new SqlParameter
+                {
+                    ParameterName = "Login",
+                    SqlDbType = System.Data.SqlDbType.VarChar,
+                    Value = login
+                };
                 command.Parameters.Add(param);
 
                 SqlDataReader reader = command.ExecuteReader();
@@ -788,13 +848,15 @@ namespace GoogleDrive.Models
                 string url = "http://" + HttpContext.Current.Request.Url.Authority + "/User/Verify/" + dto.Token;
                 try
                 {
-                    SmtpClient smtp = new SmtpClient();
-                    smtp.Host = "smtp.gmail.com";
-                    smtp.Port = 587;
-                    smtp.EnableSsl = true;
-                    smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
-                    smtp.UseDefaultCredentials = false;
-                    smtp.Credentials = new NetworkCredential("m.mianjazibali@gmail.com", "3g9&2C67rupp6TE@0T6e");
+                    SmtpClient smtp = new SmtpClient
+                    {
+                        Host = "smtp.gmail.com",
+                        Port = 587,
+                        EnableSsl = true,
+                        DeliveryMethod = SmtpDeliveryMethod.Network,
+                        UseDefaultCredentials = false,
+                        Credentials = new NetworkCredential("m.mianjazibali@gmail.com", "3g9&2C67rupp6TE@0T6e")
+                    };
 
                     using (var message = new MailMessage("m.mianjazibali@gmail.com",dto.Email))
                     {
@@ -883,6 +945,35 @@ namespace GoogleDrive.Models
 
                 int result = command.ExecuteNonQuery();
 
+                return result;
+            }
+        }
+
+        public static int deleteSharedUser(int Id, string Login)
+        {
+            string connString = @"Data Source=localhost;Initial Catalog=GoogleDrive;User ID=sa;Password=123";
+            using (SqlConnection conn = new SqlConnection(connString))
+            {
+                conn.Open();
+                string query = string.Format(@"delete from Shared where FileId = @Id AND OwnerLogin = @Login");
+                SqlCommand command = new SqlCommand(query, conn);
+                SqlParameter param = new SqlParameter
+                {
+                    ParameterName = "Id",
+                    SqlDbType = System.Data.SqlDbType.Int,
+                    Value = Id
+                };
+                command.Parameters.Add(param);
+
+                param = new SqlParameter
+                {
+                    ParameterName = "Login",
+                    SqlDbType = System.Data.SqlDbType.VarChar,
+                    Value = Login
+                };
+                command.Parameters.Add(param);
+
+                int result = command.ExecuteNonQuery();
                 return result;
             }
         }
@@ -977,10 +1068,12 @@ namespace GoogleDrive.Models
                 string query = string.Format(@"select * from Files where Id = @id");
                 SqlCommand command = new SqlCommand(query, conn);
 
-                SqlParameter param = new SqlParameter();
-                param.ParameterName = "Id";
-                param.SqlDbType = System.Data.SqlDbType.VarChar;
-                param.Value = id;
+                SqlParameter param = new SqlParameter
+                {
+                    ParameterName = "Id",
+                    SqlDbType = System.Data.SqlDbType.VarChar,
+                    Value = id
+                };
                 command.Parameters.Add(param);
 
                 SqlDataReader reader = command.ExecuteReader();

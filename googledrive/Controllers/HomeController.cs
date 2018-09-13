@@ -73,6 +73,18 @@ namespace GoogleDrive.Controllers
         }
 
         [HttpPost]
+        public JsonResult GetFileUsers(int id)
+        {
+            return Json(DBManager.getFileUsers(id), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult DeleteSharedUser(int Id, string Login)
+        {
+            return Json(DBManager.deleteSharedUser(Id, Login), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
         public JsonResult DeleteFolder(FolderDTO dto)
         {
             return Json(DBManager.deleteFolder(dto), JsonRequestBehavior.AllowGet);

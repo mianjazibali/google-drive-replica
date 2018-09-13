@@ -57,22 +57,22 @@ td {
 }
 
 .breadcrumb-item a {
-    color: cornflowerblue !important;
+    color: cornflowerblue;
     cursor: pointer;
 }
 
 .breadcrumb-item a:hover {
-    text-decoration: underline !important;
+    text-decoration: underline;
 }
 
 .breadcrumb-item.active a {
-    color: lightslategrey !important;
+    color: lightslategrey ;
     cursor: text;
-    text-decoration: none !important;
+    text-decoration: none ;
 }
 
 .navbar-nav .nav-item a.nav-link {
-    color: white !important;
+    color: white ;
 }
 
 .lg-msg {

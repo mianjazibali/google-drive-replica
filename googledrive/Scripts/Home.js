@@ -2,6 +2,49 @@
     LoadFolders();
     CreateBreadCrumbs("Home", 0);
 
+    $("#sharedusers").on('click', "#removeuseranchor", function () {
+        var $tr = $(this).closest("tr");
+        var $id = $("#sfileid").val();
+        var $login = $tr.find(":nth-child(1)").text();
+        if (!confirm("Are you sure ! You Want To Remove " + $login)) {
+            return false;
+        }
+        var $data = ({ 'Id': $id, 'Login': $login });
+        $.ajax({
+            type: 'POST',
+            dataType: 'JSON',
+            url: '/Home/DeleteSharedUser',
+            data: JSON.stringify($data),
+            contentType: "application/json",
+            processdata: false,
+            success: function (result) {
+                if (result > 0) {
+                    var $alert = $("#lg-msg");
+                    $alert.addClass("alert-success");
+                    $alert.find("strong").text("Success ! ");
+                    $alert.find("span").text("User Removed Successfully");
+                    $alert.fadeIn("slow").delay(5000).slideUp("slow");
+                    $tr.remove();
+                }
+                else {
+                    var $alert = $("#lg-msg");
+                    $alert.addClass("alert-danger");
+                    $alert.find("strong").text("Oops ! ");
+                    $alert.find("span").text("Unable To Remove User");
+                    $alert.fadeIn("slow").delay(5000).slideUp("slow");
+                }
+            },
+            error: function (err) {
+                var $alert = $("#lg-msg");
+                $alert.addClass("alert-danger");
+                $alert.find("strong").text("Error ! ");
+                $alert.find("span").text(err.statusText);
+                $alert.fadeIn("slow").delay(5000).slideUp("slow");
+            }
+        });
+        return false;
+    });
+
     $("#copyclipboardbtn").click(function () {
         var copyText = document.getElementById("copyclipboard");
         copyText.select();
@@ -203,6 +246,7 @@
                     $("#createfileinput").slideDown();
                     var $td1 = $(this).find(':nth-child(1)').text();
                     var $td2 = $(this).find('td:nth-child(2)').text();
+                    $td2 = $td2.split('.')[0];
                     $("#mfileid").val($td1);
                     $("#mfilename").val($td2);
                 }
@@ -295,9 +339,40 @@
                 if (key == "Specific") {
                     var $tr = $(this);
                     var $id = $tr.find(':nth-child(1)').text();
+                    $.ajax({
+                        type: 'POST',
+                        dataType: 'JSON',
+                        url: '/Home/GetFileUsers/' + $id,
+                        contentType: "application/json",
+                        processdata: false,
+                        success: function (result) {
+                            console.log(result);
+                            $("#sharedusers").empty();
+                            for (var i = 0; i < result.length; i++) {
+                                var $str = $("<tr>");
+                                $str.addClass("table-light");
+                                var $sth = $("<th>");
+                                $sth.text(result[i].Login);
+                                $str.append($sth);
+                                $sth = $("<th>");
+                                var $sa = $("<a>");
+                                $sa.attr({ href: '#', id:'removeuseranchor' });
+                                var $si = $("<i>");
+                                $si.addClass("fa fa-remove");
+                                $sa.append($si);
+                                $sth.append($sa);
+                                $str.append($sth);
+                                $("#sharedusers").append($str);
+                            } 
+                        },
+                        error: function (result) {
+                            console.log(result);
+                        }
+                    });
                     $("#sfileid").val($id);
                     $("#suserlogin").val("");
-                    $("#specificshare").slideDown("slow").delay(8000).slideUp("slow");
+                    $("#specificshare").slideDown("slow").delay(20000).slideUp("slow");
+                    $("#sharedusers").empty();
                     $("#sharebtn").click(function () {
                         $(this).closest('div').hide();
                         $("#spinner").show();
