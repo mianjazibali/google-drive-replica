@@ -25,6 +25,7 @@
                     $alert.find("span").text("User Removed Successfully");
                     $alert.fadeIn("slow").delay(5000).slideUp("slow");
                     $tr.remove();
+                    LoadFolders();
                 }
                 else {
                     var $alert = $("#lg-msg");
@@ -195,6 +196,7 @@
     $(function () {
         $.contextMenu({
             selector: '#folder',
+            autoHide: true,
             callback: function (key, options) {
                 if (key == "rename") {
                     $("#createfolderbtn").trigger('click');
@@ -241,6 +243,7 @@
         });
         $.contextMenu({
             selector: '#file',
+            autoHide: true,
             callback: function (key, options) {
                 if (key == "rename") {
                     $("#createfileinput").slideDown();
@@ -337,6 +340,7 @@
                 }
                 else
                 if (key == "Specific") {
+                    $("#specificshare").slideUp();
                     var $tr = $(this);
                     var $id = $tr.find(':nth-child(1)').text();
                     $.ajax({
@@ -347,6 +351,12 @@
                         processdata: false,
                         success: function (result) {
                             console.log(result);
+                            $("#specificshare").slideDown("slow");
+                            if (result.length == 0) {
+                                $("#shareduserstable").hide();
+                                return;
+                            }
+                            $("#shareduserstable").show();
                             $("#sharedusers").empty();
                             for (var i = 0; i < result.length; i++) {
                                 var $str = $("<tr>");
@@ -442,7 +452,6 @@
                             }
                         });
                     });
-                    return false;
                 }
             },
             items: {

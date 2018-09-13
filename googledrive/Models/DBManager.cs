@@ -607,7 +607,7 @@ namespace GoogleDrive.Models
             using (SqlConnection conn = new SqlConnection(connString))
             {
                 conn.Open();
-                string query = string.Format(@"select * from Files where Name like '%' + @Search + '%' AND CreatedBy = @UserId");
+                string query = string.Format(@"select * from Files FULL OUTER JOIN Shared ON Files.Id = Shared.FileId where Name like '%' + @Search + '%' AND CreatedBy = @UserId");
                 SqlCommand command = new SqlCommand(query, conn);
                 SqlParameter param = new SqlParameter
                 {
@@ -629,16 +629,22 @@ namespace GoogleDrive.Models
                 List<FileDTO> files = new List<FileDTO>();
                 while (reader.Read())
                 {
-                    FileDTO file = new FileDTO
+                    FileDTO file = new FileDTO();
+                    file.Id = reader.GetInt32(0);
+                    file.Name = reader.GetString(2);
+                    file.ParentFolderId = reader.GetInt32(3);
+                    file.FileExt = reader.GetString(4);
+                    file.FileSizeInKB = reader.GetInt32(5);
+                    file.CreatedBy = reader.GetInt32(6);
+                    file.UploadedOn = reader.GetDateTime(7).ToString("dd/MM/yyyy hh:mm tt");
+                    if (!reader.IsDBNull(10))
                     {
-                        Id = reader.GetInt32(0),
-                        Name = reader.GetString(2),
-                        ParentFolderId = reader.GetInt32(3),
-                        FileExt = reader.GetString(4),
-                        FileSizeInKB = reader.GetInt32(5),
-                        CreatedBy = reader.GetInt32(6),
-                        UploadedOn = reader.GetDateTime(7).ToString("dd/MM/yyyy hh:mm tt")
-                    };
+                        file.Token = reader.GetString(10);
+                    }
+                    if (!reader.IsDBNull(11))
+                    {
+                        file.Share = reader.GetString(11);
+                    }
                     files.Add(file);
                 }
                 return files;
@@ -651,7 +657,7 @@ namespace GoogleDrive.Models
             using (SqlConnection conn = new SqlConnection(connString))
             {
                 conn.Open();
-                string query = string.Format(@"select * from Files where ParentFolderId = @parent AND CreatedBy = @UserId");
+                string query = string.Format(@"select * from Files FULL OUTER JOIN Shared ON Files.Id = Shared.FileId where ParentFolderId = @parent AND CreatedBy = @UserId");
                 SqlCommand command = new SqlCommand(query, conn);
                 SqlParameter param = new SqlParameter
                 {
@@ -673,16 +679,22 @@ namespace GoogleDrive.Models
                 List<FileDTO> files = new List<FileDTO>();
                 while (reader.Read())
                 {
-                    FileDTO file = new FileDTO
+                    FileDTO file = new FileDTO();
+                    file.Id = reader.GetInt32(0);
+                    file.Name = reader.GetString(2);
+                    file.ParentFolderId = reader.GetInt32(3);
+                    file.FileExt = reader.GetString(4);
+                    file.FileSizeInKB = reader.GetInt32(5);
+                    file.CreatedBy = reader.GetInt32(6);
+                    file.UploadedOn = reader.GetDateTime(7).ToString("dd/MM/yyyy hh:mm tt");
+                    if (!reader.IsDBNull(10))
                     {
-                        Id = reader.GetInt32(0),
-                        Name = reader.GetString(2),
-                        ParentFolderId = reader.GetInt32(3),
-                        FileExt = reader.GetString(4),
-                        FileSizeInKB = reader.GetInt32(5),
-                        CreatedBy = reader.GetInt32(6),
-                        UploadedOn = reader.GetDateTime(7).ToString("dd/MM/yyyy hh:mm tt")
-                    };
+                        file.Token = reader.GetString(10);
+                    }
+                    if (!reader.IsDBNull(11))
+                    {
+                        file.Share = reader.GetString(11);
+                    }
                     files.Add(file);
                 }
                 return files;
@@ -1083,8 +1095,6 @@ namespace GoogleDrive.Models
                     dto.UniqueName = reader.GetString(1);
                     dto.Name = reader.GetString(2);
                     dto.FileExt = reader.GetString(4);
-                    dto.Token = reader.GetString(9);
-                    dto.Share = reader.GetString(10);
                 }
                 return dto;
             }
