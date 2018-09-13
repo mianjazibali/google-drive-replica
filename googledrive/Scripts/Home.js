@@ -3,6 +3,7 @@
     CreateBreadCrumbs("Home", 0);
 
     $("#sharedusers").on('click', "#removeuseranchor", function () {
+        $("#spinner").show();
         var $tr = $(this).closest("tr");
         var $id = $("#sfileid").val();
         var $login = $tr.find(":nth-child(1)").text();
@@ -18,6 +19,7 @@
             contentType: "application/json",
             processdata: false,
             success: function (result) {
+                $("#spinner").hide();
                 if (result > 0) {
                     var $alert = $("#lg-msg");
                     $alert.addClass("alert-success");
@@ -36,6 +38,7 @@
                 }
             },
             error: function (err) {
+                $("#spinner").hide();
                 var $alert = $("#lg-msg");
                 $alert.addClass("alert-danger");
                 $alert.find("strong").text("Error ! ");
@@ -59,12 +62,14 @@
     });
 
     $("#searchinput").keyup(function () {
+        $("#spinner").show();
         var $search = $("#searchinput").val();
         var $data = { 'search': $search };
         setTimeout(function () {
             $("TableBody").hide();
             if ($search == "") {
                 LoadFolders();
+                $("#spinner").hide();
                 return false;
             }
             $.ajax({
@@ -89,6 +94,7 @@
                             console.log(result);
                             FileResult(result);
                             $("TableBody").show();
+                            $("#spinner").hide();
                         },
                         error: function (err) {
                             var $alert = $("#lg-msg");
@@ -126,6 +132,8 @@
             var sp = $('<span>');
             sp.text(result[i].Name)
             td.append(sp);
+            tr.append(td);
+            td = $('<td>');
             tr.append(td);
             td = $('<td>');
             td.text("--");
@@ -207,7 +215,9 @@
                 }           
                 else
                 if (key == "delete") {
+                    $("#spinner").show();
                     if (!confirm("Are you sure ! Its Subfolders and files will be deleted")) {
+                        $("#spinner").hide();
                         return;
                     }
                     var $tr = $(this);
@@ -219,6 +229,7 @@
                         contentType: false,
                         processData: false,
                         success: function (result) {
+                            $("#spinner").hide();
                             var $alert = $("#lg-msg");
                             $alert.removeClass("alert-danger");
                             $alert.addClass("alert-success");
@@ -227,6 +238,7 @@
                             $tr.remove();
                         },
                         error: function (err) {
+                            $("#spinner").hide();
                             var $alert = $("#lg-msg");
                             $alert.addClass("alert-danger");
                             $alert.find("strong").text("Error ! ");
@@ -255,10 +267,12 @@
                 }
                 else
                 if (key == "delete") {
+                    $("#spinner").show();
                     var $tr = $(this);
                     var $id = $tr.find(':nth-child(1)').text();
                     var $name = $tr.find('td:nth-child(2)').text();
                     if (!confirm("Are you sure you want to delete \"" + $name + "\"")) {
+                        $("#spinner").hide();
                         return;
                     }
 
@@ -268,6 +282,7 @@
                         contentType: false,
                         processData: false,
                         success: function (result) {
+                            $("#spinner").hide();
                             var $alert = $("#lg-msg");
                             $alert.removeClass("alert-danger");
                             $alert.addClass("alert-success");
@@ -276,6 +291,7 @@
                             $tr.remove();
                         },
                         error: function (err) {
+                            $("#spinner").hide();
                             var $alert = $("#lg-msg");
                             $alert.addClass("alert-danger");
                             $alert.find("span").text(err.statusText);
@@ -285,6 +301,7 @@
                 }
                 else
                 if (key == "download") {
+                    $("#spinner").show();
                     var $id = $(this).find(':nth-child(1)').text();
                     $.ajax({
                         type: "POST",
@@ -292,6 +309,7 @@
                         contentType: false,
                         processData: false,
                         success: function (result) {
+                            $("#spinner").hide();
                             //alert(result.UniqueName + result.FileExt + result.Name);
                             //window.location = "Uploads/" + result.UniqueName + result.FileExt;
                             //$.fileDownload("Uploads/" + result.UniqueName + result.FileExt);
@@ -301,6 +319,7 @@
                             console.log(result);
                         },
                         error: function (err) {
+                            $("#spinner").hide();
                             var $alert = $("#lg-msg");
                             $alert.addClass("alert-danger");
                             $alert.find("strong").text("Error ! ");
@@ -311,6 +330,7 @@
                 }
                 else
                 if (key == "Public") {
+                    $("#spinner").show();
                     var $tr = $(this);
                     var $id = $tr.find(':nth-child(1)').text();
                     $.ajax({
@@ -319,6 +339,7 @@
                         contentType: false,
                         processData: false,
                         success: function (result) {
+                            $("#spinner").hide();
                             console.log(result);
                             result = window.location.origin + "/Download/File/" + result;
                             $("#copyclipboard").val(result);
@@ -330,6 +351,7 @@
                             $td.append($font);
                         },
                         error: function (err) {
+                            $("#spinner").hide();
                             var $alert = $("#lg-msg");
                             $alert.addClass("alert-danger");
                             $alert.find("strong").text("Error ! ");
@@ -341,6 +363,7 @@
                 else
                 if (key == "Specific") {
                     $("#specificshare").slideUp();
+                    $("#spinner").show();
                     var $tr = $(this);
                     var $id = $tr.find(':nth-child(1)').text();
                     $.ajax({
@@ -354,6 +377,7 @@
                             $("#specificshare").slideDown("slow");
                             if (result.length == 0) {
                                 $("#shareduserstable").hide();
+                                $("#spinner").hide();
                                 return;
                             }
                             $("#shareduserstable").show();
@@ -374,8 +398,10 @@
                                 $str.append($sth);
                                 $("#sharedusers").append($str);
                             } 
+                            $("#spinner").hide();
                         },
                         error: function (result) {
+                            $("#spinner").hide();
                             console.log(result);
                         }
                     });
@@ -444,6 +470,7 @@
                                 }
                             },
                             error: function (err) {
+                                $("#spinner").hide();
                                 var $alert = $("#lg-msg");
                                 $alert.addClass("alert-danger");
                                 $alert.find("strong").text("Error ! ");
@@ -451,6 +478,32 @@
                                 $alert.fadeIn("slow").delay(5000).slideUp("slow");
                             }
                         });
+                    });
+                }
+                else
+                if (key == "Only Me") {
+                    $("#spinner").show();
+                    var $tr = $(this);
+                    var $id = $tr.find(':nth-child(1)').text();
+                    $.ajax({
+                        type: "POST",
+                        url: '/Home/RemoveFileToken/' + $id,
+                        contentType: false,
+                        processData: false,
+                        success: function (result) { 
+                            console.log(result);
+                            var $td = $tr.find(':nth-child(3)');
+                            $td.empty();
+                            $("#spinner").hide();
+                        },
+                        error: function (err) {
+                            $("#spinner").hide();
+                            var $alert = $("#lg-msg");
+                            $alert.addClass("alert-danger");
+                            $alert.find("strong").text("Error ! ");
+                            $alert.find("span").text(err.statusText);
+                            $alert.fadeIn("slow").delay(5000).slideUp("slow");
+                        }
                     });
                 }
             },
@@ -463,13 +516,15 @@
                     "icon": "fa-share-alt",
                     "items": {
                         "Public": { "name": "Public", "icon": "fa-users" },
-                        "Specific": { "name": "Specific", "icon": "fa-user" }
+                        "Specific": { "name": "Specific", "icon": "fa-user" },
+                        "Only Me": { "name": "Only Me", "icon": "fa-lock" }
                     }
                 }
             }
         });
 
         $("#savefile").click(function () {
+            $("#spinner").show();
             var $id = $("#mfileid").val();
             var $filename = $("#mfilename").val();
             var $data = ({ 'Id': $id, 'Name': $filename });
@@ -482,6 +537,7 @@
                 contentType: "application/json",
                 processdata: false,
                 success: function (result) {
+                    $("#spinner").hide();
                     $("#createfileinput").slideUp();
                     LoadFolders();
                 },
@@ -514,6 +570,7 @@
     }
 
     function LoadFolders() {
+        $("#spinner").show();
         var $id = $("#parentfolderid").val();
         var $data = { 'Id': $id };
         $.ajax({
@@ -542,6 +599,8 @@
                     td.append(sp);
                     tr.append(td);
                     td = $('<td>');
+                    tr.append(td);
+                    td = $('<td>');
                     td.text("--");
                     tr.append(td);
                     td = $('<td>');
@@ -555,6 +614,7 @@
                     BindEvents();
                 }
                 LoadFiles();
+                $("#spinner").hide();
             },
             error: function () {
                 alert('Error Occured');
@@ -659,7 +719,7 @@
     });
 
     $('#FileUpload').change(function () {
-
+        $("#spinner").show();
         if (window.FormData !== undefined) {
             var $parent = $("#parentfolderid").val();
             var fileUpload = $("#FileUpload").get(0);
@@ -691,8 +751,10 @@
                     $("#upload").trigger("reset");
                     ClearTable();
                     LoadFolders();
+                    $("#spinner").hide();
                 },
                 error: function (err) {
+                    $("#spinner").hide();
                     var $alert = $("#lg-msg");
                     $alert.addClass("alert-danger");
                     $alert.find("strong").text("Error ! ");
@@ -712,10 +774,10 @@
     });
 
     $("#savefolder").click(function () {
+        $("#spinner").show();
         var $id = $("#mfolderid").val();
         var $parentid = $("#parentfolderid").val();
         var $foldername = $("#mfoldername").val();
-
         if (!$foldername){
             var $alert = $("#lg-msg");
             $alert.addClass("alert-danger");
@@ -748,8 +810,10 @@
                 $('#mfoldername').val("");
                 LoadFolders();
                 $("#createfolderinput").slideUp();
+                $("#spinner").hide();
             },
             error: function (err) {
+                $("#spinner").hide();
                 var $alert = $("#lg-msg");
                 $alert.addClass("alert-danger");
                 $alert.find("strong").text("Error ! ");

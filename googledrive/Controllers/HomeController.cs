@@ -46,6 +46,12 @@ namespace GoogleDrive.Controllers
         }
 
         [HttpPost]
+        public ActionResult RemoveFileToken(int id)
+        {
+            return Json(DBManager.removeFileToken(id), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
         public ActionResult GenerateSpecificFileToken(int Id, string Login)
         {
             return Json(DBManager.generateSpecificFileToken(Id, Login), JsonRequestBehavior.AllowGet);

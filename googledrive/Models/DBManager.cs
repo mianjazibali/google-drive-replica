@@ -167,7 +167,27 @@ namespace GoogleDrive.Models
             }
         }
 
-        public static string generateFileToken(int id)
+        public static int removeFileToken(int id)
+        {
+            string connString = @"Data Source=localhost;Initial Catalog=GoogleDrive;User ID=sa;Password=123";
+            using (SqlConnection conn = new SqlConnection(connString))
+            {
+                conn.Open();
+                string query = string.Format("delete from Shared where FileId = @Id");
+                SqlCommand command = new SqlCommand(query, conn);
+                SqlParameter param = new SqlParameter
+                {
+                    ParameterName = "Id",
+                    SqlDbType = System.Data.SqlDbType.VarChar,
+                    Value = id
+                };
+                command.Parameters.Add(param);
+                int result = command.ExecuteNonQuery();
+                return result;
+            }
+        }
+
+                public static string generateFileToken(int id)
         {
             string connString = @"Data Source=localhost;Initial Catalog=GoogleDrive;User ID=sa;Password=123";
             using (SqlConnection conn = new SqlConnection(connString))
