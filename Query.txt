@@ -41,3 +41,11 @@ Token varchar(50) null,
 Share varchar(50) null,
 Primary key(Id)
 )
+
+create table Shared(
+Id int not null identity(1,1),
+Token varchar(50) not null,
+Owner varchar(20) null,
+FileId int not null,
+Primary key(Id)
+)

@@ -315,6 +315,15 @@
                             success: function (result) {
                                 console.log(result);
                                 $("#spinner").hide();
+                                if (result == "UserAlreadyExist") {
+                                    var $alert = $("#lg-msg");
+                                    $alert.removeClass("alert-success");
+                                    $alert.addClass("alert-danger");
+                                    $alert.find("strong").text("Oops ! ");
+                                    $alert.find("span").text("User Already Added");
+                                    $alert.fadeIn("slow").delay(5000).slideUp("slow");
+                                }
+                                else
                                 if (result == "UserNotFound") {
                                     var $alert = $("#lg-msg");
                                     $alert.removeClass("alert-success");

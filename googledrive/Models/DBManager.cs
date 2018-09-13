@@ -37,7 +37,7 @@ namespace GoogleDrive.Models
                 }
                 reader.Close();
 
-                query = string.Format(@"select Name from Users where Login = @Login AND Password = @Password AND Token = 'NULL'");
+                query = string.Format(@"select Name from Users where Login = @Login AND Password = @Password AND Token IS NULL");
                 command = new SqlCommand(query, conn);
 
                 param = new SqlParameter();
@@ -163,7 +163,7 @@ namespace GoogleDrive.Models
             using (SqlConnection conn = new SqlConnection(connString))
             {
                 conn.Open();
-                string query = string.Format("select Token from Files where Id = @Id AND Token IS NOT NULL");
+                string query = string.Format("select Token from Shared where FileId = @Id AND OwnerLogin IS NULL");
                 SqlCommand command = new SqlCommand(query, conn);
                 SqlParameter param = new SqlParameter
                 {
@@ -174,40 +174,43 @@ namespace GoogleDrive.Models
                 command.Parameters.Add(param);
                 SqlDataReader reader = command.ExecuteReader();
                 string token = "";
-                if(reader.Read())
+                if (reader.Read())
                 {
                     token = reader.GetString(0);
                 }
-                else
+                reader.Close();
+                if(token == "")
                 {
                     token = Guid.NewGuid().ToString();
+                    query = string.Format("insert into Shared(Token,FileId) values (@Token,@Id)");
+                    command = new SqlCommand(query, conn);
+                    param = new SqlParameter
+                    {
+                        ParameterName = "Token",
+                        SqlDbType = System.Data.SqlDbType.VarChar,
+                        Value = token
+                    };
+                    command.Parameters.Add(param);
+                    param = new SqlParameter
+                    {
+                        ParameterName = "Id",
+                        SqlDbType = System.Data.SqlDbType.Int,
+                        Value = id
+                    };
+                    command.Parameters.Add(param);
+                    command.ExecuteNonQuery();
                 }
-                reader.Close();
-                query = string.Format("update Files set Token = @Token, Share = NULL where Id = @Id");
+                query = string.Format("delete from Shared where FileId = @Id AND OwnerLogin IS NOT NULL");
                 command = new SqlCommand(query, conn);
                 param = new SqlParameter
                 {
-                    ParameterName = "Token",
-                    SqlDbType = System.Data.SqlDbType.VarChar,
-                    Value = token
-                };
-                command.Parameters.Add(param);
-                param = new SqlParameter
-                {
                     ParameterName = "Id",
-                    SqlDbType = System.Data.SqlDbType.VarChar,
+                    SqlDbType = System.Data.SqlDbType.Int,
                     Value = id
                 };
                 command.Parameters.Add(param);
-                int result = command.ExecuteNonQuery();
-                if(result > 0)
-                {
-                    return token;
-                }
-                else
-                {
-                    return "";
-                }
+                command.ExecuteNonQuery();
+                return token;
             }
         }
 
@@ -228,28 +231,15 @@ namespace GoogleDrive.Models
                 command.Parameters.Add(param);
                 SqlDataReader reader = command.ExecuteReader();
                 string Email = "";
-                if (reader.Read()){
+                if (reader.Read())
+                {
                     Email = reader.GetString(0);
                 }
-                if (Email != ""){
-                    reader.Close();
-                    string token = Guid.NewGuid().ToString();
-                    query = string.Format("update Files set Token = @Token, Share = @Share where Id = @Id");
+                reader.Close();
+                if (Email != "")
+                {
+                    query = string.Format("select Count(*) from Files where Id = @Id");
                     command = new SqlCommand(query, conn);
-                    param = new SqlParameter
-                    {
-                        ParameterName = "Token",
-                        SqlDbType = System.Data.SqlDbType.VarChar,
-                        Value = token
-                    };
-                    command.Parameters.Add(param);
-                    param = new SqlParameter
-                    {
-                        ParameterName = "Share",
-                        SqlDbType = System.Data.SqlDbType.VarChar,
-                        Value = Login
-                    };
-                    command.Parameters.Add(param);
                     param = new SqlParameter
                     {
                         ParameterName = "Id",
@@ -257,10 +247,76 @@ namespace GoogleDrive.Models
                         Value = Id
                     };
                     command.Parameters.Add(param);
-                    int result = command.ExecuteNonQuery();
-                    if(result > 0)
+                    reader = command.ExecuteReader();
+                    reader.Read(); 
+                    if(reader.GetInt32(0) > 0)
                     {
-                        
+                        reader.Close();
+                        query = string.Format("select count(*) from Shared where FileId = @Id AND OwnerLogin = @Login");
+                        command = new SqlCommand(query, conn);
+                        param = new SqlParameter
+                        {
+                            ParameterName = "Id",
+                            SqlDbType = System.Data.SqlDbType.Int,
+                            Value = Id
+                        };
+                        command.Parameters.Add(param);
+                        param = new SqlParameter
+                        {
+                            ParameterName = "Login",
+                            SqlDbType = System.Data.SqlDbType.VarChar,
+                            Value = Login
+                        };
+                        command.Parameters.Add(param);
+                        reader = command.ExecuteReader();
+                        if (reader.Read())
+                        {
+                            int found = reader.GetInt32(0);
+                            if(found > 0)
+                            {
+                                return "UserAlreadyExist";
+                            }
+                        }
+                        reader.Close();
+                        string token = Guid.NewGuid().ToString();
+                        query = string.Format("insert into Shared(Token,OwnerLogin,FileId) values(@Token,@Login,@Id)");
+                        command = new SqlCommand(query, conn);
+                        param = new SqlParameter
+                        {
+                            ParameterName = "Token",
+                            SqlDbType = System.Data.SqlDbType.VarChar,
+                            Value = token
+                        };
+                        command.Parameters.Add(param);
+                        param = new SqlParameter
+                        {
+                            ParameterName = "Login",
+                            SqlDbType = System.Data.SqlDbType.VarChar,
+                            Value = Login
+                        };
+                        command.Parameters.Add(param);
+                        param = new SqlParameter
+                        {
+                            ParameterName = "Id",
+                            SqlDbType = System.Data.SqlDbType.Int,
+                            Value = Id
+                        };
+                        command.Parameters.Add(param);
+                        int result = command.ExecuteNonQuery();
+                        if (result > 0)
+                        {
+                            query = string.Format("delete from Shared where FileId = @Id AND OwnerLogin IS NULL");
+                            command = new SqlCommand(query, conn);
+                            param = new SqlParameter
+                            {
+                                ParameterName = "Id",
+                                SqlDbType = System.Data.SqlDbType.Int,
+                                Value = Id
+                            };
+                            command.Parameters.Add(param);
+                            command.ExecuteNonQuery();
+                        }
+                        /*
                         string url = "http://" + HttpContext.Current.Request.Url.Authority + "/Download/File/" + token;
                         try
                         {
@@ -272,10 +328,10 @@ namespace GoogleDrive.Models
                             smtp.UseDefaultCredentials = false;
                             smtp.Credentials = new NetworkCredential("m.mianjazibali@gmail.com", "3g9&2C67rupp6TE@0T6e");
 
-                            using (var message = new MailMessage("m.mianjazibali@gmail.com",Email))
+                            using (var message = new MailMessage("m.mianjazibali@gmail.com", Email))
                             {
                                 message.Subject = "File Sharing";
-                                message.Body = url; 
+                                message.Body = url;
                                 smtp.Send(message);
                             }
                         }
@@ -283,7 +339,7 @@ namespace GoogleDrive.Models
                         {
                             return "Error";
                         }
-                        
+                        */
                         return token;
                     }
                     else
@@ -298,13 +354,13 @@ namespace GoogleDrive.Models
             }
         }
 
-        public static FileDTO getFile(string token)
+        public static FileDTO getFile(string token, string login)
         {
             string connString = @"Data Source=localhost;Initial Catalog=GoogleDrive;User ID=sa;Password=123";
             using (SqlConnection conn = new SqlConnection(connString))
             {
                 conn.Open();
-                string query = string.Format(@"select * from Files where Token = @Token");
+                string query = string.Format(@"select FileId from Shared where Token = @Token AND OwnerLogin IS NULL OR OwnerLogin = @Login");
                 SqlCommand command = new SqlCommand(query, conn);
 
                 SqlParameter param = new SqlParameter();
@@ -313,22 +369,39 @@ namespace GoogleDrive.Models
                 param.Value = token;
                 command.Parameters.Add(param);
 
+                param = new SqlParameter();
+                param.ParameterName = "Login";
+                param.SqlDbType = System.Data.SqlDbType.VarChar;
+                param.Value = login;
+                command.Parameters.Add(param);
                 SqlDataReader reader = command.ExecuteReader();
+                int Fileid = 0;
+                if (reader.Read())
+                {
+                    Fileid = reader.GetInt32(0);
+                }
+                reader.Close();
                 FileDTO dto = new FileDTO();
+                if ( Fileid == 0)
+                {
+                    return dto;
+                }
+                query = string.Format(@"select * from Files where Id = @Id");
+                command = new SqlCommand(query, conn);
+
+                param = new SqlParameter();
+                param.ParameterName = "Id";
+                param.SqlDbType = System.Data.SqlDbType.Int;
+                param.Value = Fileid;
+                command.Parameters.Add(param);
+
+                reader = command.ExecuteReader();
                 if (reader.Read())
                 {
                     dto.UniqueName = reader.GetString(1);
                     dto.Name = reader.GetString(2);
                     dto.FileExt = reader.GetString(4);
-                    dto.FileSizeInKB = reader.GetInt32(5);
-                    if (!reader.IsDBNull(9))
-                    {
-                        dto.Token = reader.GetString(9);
-                    }
-                    if (!reader.IsDBNull(10))
-                    {
-                        dto.Share = reader.GetString(10);
-                    }  
+                    dto.FileSizeInKB = reader.GetInt32(5); 
                 }
                 return dto;
             }
@@ -510,14 +583,6 @@ namespace GoogleDrive.Models
                     file.FileSizeInKB = reader.GetInt32(5);
                     file.CreatedBy = reader.GetInt32(6);
                     file.UploadedOn = reader.GetDateTime(7).ToString("dd/MM/yyyy hh:mm tt");
-                    if (!reader.IsDBNull(9))
-                    {
-                        file.Token = reader.GetString(9);
-                    }
-                    if (!reader.IsDBNull(10))
-                    {
-                        file.Share = reader.GetString(10);
-                    }
                     files.Add(file);
                 }
                 return files;
@@ -560,14 +625,6 @@ namespace GoogleDrive.Models
                     file.FileSizeInKB = reader.GetInt32(5);
                     file.CreatedBy = reader.GetInt32(6);
                     file.UploadedOn = reader.GetDateTime(7).ToString("dd/MM/yyyy hh:mm tt");
-                    if (!reader.IsDBNull(9))
-                    {
-                        file.Token = reader.GetString(9);
-                    }
-                    if (!reader.IsDBNull(10))
-                    {
-                        file.Share = reader.GetString(10);
-                    }
                     files.Add(file);
                 }
                 return files;
