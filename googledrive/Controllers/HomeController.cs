@@ -54,6 +54,10 @@ namespace GoogleDrive.Controllers
         [HttpPost]
         public ActionResult GenerateSpecificFileToken(int Id, string Login)
         {
+            if(Login == (string)Session["Login"])
+            {
+                return Json("CurrentUser", JsonRequestBehavior.AllowGet);
+            }
             return Json(DBManager.generateSpecificFileToken(Id, Login), JsonRequestBehavior.AllowGet);
         }
 
