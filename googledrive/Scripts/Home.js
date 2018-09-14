@@ -2,6 +2,22 @@
     LoadFolders();
     CreateBreadCrumbs("Home", 0);
 
+    $("#cancelsharebtn").click(function () {
+        $(this).closest("div").slideUp();
+    });
+
+    $("#suserlogin").keyup(function () {
+        var $login = $("#suserlogin").val();
+        if ($login == "") {
+            $("#sharebtn").fadeOut("slow");
+            $("#cancelsharebtn").fadeIn("slow");
+            return;
+        }
+        $("#cancelsharebtn").fadeOut("slow");
+        $("#sharebtn").fadeIn("slow");
+        return;
+    });
+
     $("#sharedusers").on('click', "#removeuseranchor", function () {
         $("#spinner").show();
         var $tr = $(this).closest("tr");
@@ -362,7 +378,6 @@
                 }
                 else
                 if (key == "Specific") {
-                    $("#specificshare").slideUp();
                     $("#spinner").show();
                     var $tr = $(this);
                     var $id = $tr.find(':nth-child(1)').text();
@@ -407,7 +422,7 @@
                     });
                     $("#sfileid").val($id);
                     $("#suserlogin").val("");
-                    $("#specificshare").slideDown("slow").delay(20000).slideUp("slow");
+                    $("#specificshare").slideDown("slow");
                     $("#sharedusers").empty();
                     $("#sharebtn").click(function () {
                         $(this).closest('div').hide();

@@ -627,7 +627,7 @@ namespace GoogleDrive.Models
             using (SqlConnection conn = new SqlConnection(connString))
             {
                 conn.Open();
-                string query = string.Format(@"select * from Files FULL OUTER JOIN Shared ON Files.Id = Shared.FileId where Name like '%' + @Search + '%' AND CreatedBy = @UserId");
+                string query = string.Format(@"select * FROM Files f FULL OUTER JOIN ( select s.*, ROW_NUMBER() over (partition by FileId order by Id asc) as seqnum from Shared s ) s on f.Id = s.FileId and seqnum = 1 where Name like '%' + @Search + '%' AND CreatedBy = @UserId order BY f.Id");
                 SqlCommand command = new SqlCommand(query, conn);
                 SqlParameter param = new SqlParameter
                 {
@@ -677,7 +677,7 @@ namespace GoogleDrive.Models
             using (SqlConnection conn = new SqlConnection(connString))
             {
                 conn.Open();
-                string query = string.Format(@"select * from Files FULL OUTER JOIN Shared ON Files.Id = Shared.FileId where ParentFolderId = @parent AND CreatedBy = @UserId");
+                string query = string.Format(@"select * FROM Files f FULL OUTER JOIN ( select s.*, ROW_NUMBER() over (partition by FileId order by Id asc) as seqnum from Shared s ) s on f.Id = s.FileId and seqnum = 1 where ParentFolderId = @parent AND CreatedBy = @UserId order BY f.Id");
                 SqlCommand command = new SqlCommand(query, conn);
                 SqlParameter param = new SqlParameter
                 {
