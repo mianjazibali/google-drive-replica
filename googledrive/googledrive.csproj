@@ -150,6 +150,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\DownloadController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\UserController.cs" />
@@ -159,6 +160,7 @@
     <Compile Include="Models\DBManager.cs" />
     <Compile Include="Models\FileDTO.cs" />
     <Compile Include="Models\FolderDTO.cs" />
+    <Compile Include="Models\LoginDTO.cs" />
     <Compile Include="Models\UserDTO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -174,6 +176,7 @@
     <Content Include="Content\Home.css" />
     <Content Include="Content\Icons\file.png" />
     <Content Include="Content\Icons\folder.png" />
+    <Content Include="Content\img\engineer-wallpaper-1920x1080.jpg" />
     <Content Include="Content\img\load.gif" />
     <Content Include="Content\Login.css" />
     <Content Include="Content\Lumen.css" />
@@ -231,6 +234,10 @@
     <Content Include="Views\Shared\_DownloadLayout.cshtml" />
     <Content Include="Views\Download\File.cshtml" />
     <Content Include="Views\Download\NotExist.cshtml" />
+    <Content Include="Views\Admin\Login.cshtml" />
+    <Content Include="Views\Shared\_AdminLayout.cshtml" />
+    <Content Include="Views\Admin\Home.cshtml" />
+    <Content Include="Views\Shared\_AdminLoginLayout.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,0 +1,95 @@
+﻿
+@{
+    ViewBag.Title = "Login";
+    Layout = "~/Views/Shared/_AdminLoginLayout.cshtml";
+}
+
+@section style{
+    <style>
+        html {
+            background: url('../../Content/img/engineer-wallpaper-1920x1080.jpg') no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        .form button{
+            background: #ff0000;
+        }
+
+        .form button:hover,
+        .form button:active,
+        .form button:focus {
+            background: #e50000;
+        }
+    </style>
+}
+
+@section script{
+    <script>
+        $(document).ready(function () {
+            $("#loginbtn").click(function () {
+                $("#loadericon").show();
+                var $userlogin = $("#userlogin").val();
+                var $userpassword = $("#userpassword").val();
+                if ((!$userlogin) || (!$userpassword)) {
+                    $("#loadericon").hide();
+                    var $alert = $("#lg-msg");
+                    $alert.addClass("alert-danger");
+                    $alert.find("strong").text("Error ! ");
+                    $alert.find("span").text("One or More Fields Are Empty");
+                    $alert.slideDown("slow").delay(5000).slideUp("slow");
+                    return false;
+                }
+
+                var $data = { 'Login': $userlogin, 'Password': $userpassword };
+
+                $.ajax({
+                    type: 'POST',
+                    dataType: 'JSON',
+                    url: '/Admin/Login',
+                    data: JSON.stringify($data),
+                    contentType: "application/json",
+                    processdata: false,
+                    success: function (result) {
+                        console.log(result);
+                        if (result == "") {
+                            var $alert = $("#lg-msg");
+                            $alert.addClass("alert-danger");
+                            $alert.find("strong").text("Oops ! ");
+                            $alert.find("span").text("Invalid Username Or Password");
+                            $alert.slideDown("slow").delay(5000).slideUp("slow");
+                            $('#userpassword').val("");
+                        }
+                        else {
+                            window.location.href = '@Url.Content("~/Admin/Home")';
+                        }
+                    },
+                    error: function () {
+                        $("#loadericon").hide();
+                        var $alert = $("#lg-msg");
+                        $alert.addClass("alert-danger");
+                        $alert.find("strong").text("Error ! ");
+                        $alert.find("span").text(err.statusText);
+                        $alert.slideDown("slow").delay(5000).slideUp("slow");
+                    }
+                });
+
+            });
+        });        
+    </script>
+}
+
+<div>
+    <div id="lg-msg" class="lg-msg alert">
+        <strong></strong>
+        <span></span>
+    </div>
+    <div class="form">
+        <div class="login-form">
+            <input type="text" name="userlogin" id="userlogin" placeholder="Login" />
+            <input type="password" name="userpassword" id="userpassword" placeholder="Password" />
+            <button id="loginbtn">Login</button>
+        </div>
+    </div>
+</div>
+
+

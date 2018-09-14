@@ -1,4 +1,5 @@
-﻿using System;
+﻿using googledrive.Models;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
@@ -69,6 +70,29 @@ namespace GoogleDrive.Models
                 {
                     return "";
                 }
+            }
+        }
+
+        public static List<LoginDTO> getLoginUsers()
+        {
+            string connString = @"Data Source=localhost;Initial Catalog=GoogleDrive;User ID=sa;Password=123";
+            using (SqlConnection conn = new SqlConnection(connString))
+            {
+                conn.Open();
+                string query = string.Format(@"select * from Login");
+                SqlCommand command = new SqlCommand(query, conn);
+                SqlDataReader reader = command.ExecuteReader();
+                List<LoginDTO> dtos = new List<LoginDTO>();
+                while (reader.Read())
+                {
+                    LoginDTO dto = new LoginDTO();
+                    dto.Id = reader.GetInt32(0);
+                    dto.Login = reader.GetString(1);
+                    dto.IpAddress = reader.GetString(2);
+                    dto.LoggedOn = reader.GetDateTime(3).ToString();
+                    dtos.Add(dto);
+                }
+                return dtos;
             }
         }
 

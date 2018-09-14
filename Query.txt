@@ -46,6 +46,14 @@ create table Shared(
 Id int not null identity(1,1),
 Token varchar(50) not null,
 OwnerLogin varchar(20) null,
-FileId int not null FOREIGN KEY REFERENCES Files(Id),
+FileId int not null,
 Primary key(Id)
 )
+
+create table Login(
+Id int not null identity(1,1),
+Login varchar(50) not null,
+IpAddress varchar(20) not null,
+LoggedOn datetime not null
+Primary key(Id)
+) 
