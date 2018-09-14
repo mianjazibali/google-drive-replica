@@ -28,7 +28,7 @@ namespace googledrive.Controllers
             FileDTO dto = DBManager.getFile(id, (string)Session["Login"]);
             if (dto.UniqueName == null)
             {
-                ViewBag.Msg = "File Not Found Or Access Denied";
+                ViewBag.Msg = "Not Found / Access Denied";
                 return View("NotExist");
             }
             else
@@ -36,9 +36,15 @@ namespace googledrive.Controllers
                 ViewData["Name"] = dto.Name;
                 ViewData["FileExt"] = dto.FileExt;
                 ViewData["FileSizeInKB"] = dto.FileSizeInKB;
-                ViewData["File"] = dto.UniqueName + dto.FileExt;
+                ViewData["UniqueName"] = dto.UniqueName;
                 return View();
             } 
+        }
+
+        [HttpPost]
+        public JsonResult UpdateDownloadCount(string UniqueName)
+        {
+            return Json(DBManager.updateDownloadCount(UniqueName), JsonRequestBehavior.AllowGet);
         }
     }
 }

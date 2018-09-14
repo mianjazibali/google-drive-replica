@@ -57,18 +57,22 @@ td {
 }
 
 .breadcrumb-item a {
-    color: cornflowerblue;
+    color: cornflowerblue !important;
     cursor: pointer;
 }
 
 .breadcrumb-item a:hover {
-    text-decoration: underline;
+    text-decoration: underline !important;
 }
 
 .breadcrumb-item.active a {
-    color: lightslategrey ;
+    color: lightslategrey !important;
     cursor: text;
-    text-decoration: none ;
+    text-decoration: none !important;
+}
+
+.breadcrumb-item.active a:hover {
+    color: lightslategrey !important;
 }
 
 .navbar-nav .nav-item a.nav-link {

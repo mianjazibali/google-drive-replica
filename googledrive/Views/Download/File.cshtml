@@ -10,7 +10,8 @@
         </div>
         <p class="filename">@ViewData["Name"]@ViewData["FileExt"]</p>
         <p class="filesize">@ViewData["FileSizeInKB"] KB</p>
-        <a id="adownloadbtn" href="~/Uploads/@ViewData["file"]" download="@ViewData["Name"]" hidden>Download</a>
+        <input type="text" id="filename" value="@ViewData["UniqueName"]" hidden/>
+        <a id="adownloadbtn" href="~/Uploads/@ViewData["UniqueName"]@ViewData["FileExt"]" download="@ViewData["Name"]" hidden>Download</a>
         <button id="dummydownloadbtn">Download</button>
     </div>
 </div>

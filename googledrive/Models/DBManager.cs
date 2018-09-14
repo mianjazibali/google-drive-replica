@@ -681,13 +681,13 @@ namespace GoogleDrive.Models
                     file.FileSizeInKB = reader.GetInt32(5);
                     file.CreatedBy = reader.GetInt32(6);
                     file.UploadedOn = reader.GetDateTime(7).ToString("dd/MM/yyyy hh:mm tt");
-                    if (!reader.IsDBNull(10))
-                    {
-                        file.Token = reader.GetString(10);
-                    }
                     if (!reader.IsDBNull(11))
                     {
-                        file.Share = reader.GetString(11);
+                        file.Token = reader.GetString(11);
+                    }
+                    if (!reader.IsDBNull(12))
+                    {
+                        file.Share = reader.GetString(12);
                     }
                     files.Add(file);
                 }
@@ -731,13 +731,13 @@ namespace GoogleDrive.Models
                     file.FileSizeInKB = reader.GetInt32(5);
                     file.CreatedBy = reader.GetInt32(6);
                     file.UploadedOn = reader.GetDateTime(7).ToString("dd/MM/yyyy hh:mm tt");
-                    if (!reader.IsDBNull(10))
-                    {
-                        file.Token = reader.GetString(10);
-                    }
                     if (!reader.IsDBNull(11))
                     {
-                        file.Share = reader.GetString(11);
+                        file.Token = reader.GetString(11);
+                    }
+                    if (!reader.IsDBNull(12))
+                    {
+                        file.Share = reader.GetString(12);
                     }
                     files.Add(file);
                 }
@@ -1115,15 +1115,34 @@ namespace GoogleDrive.Models
             }
         }
 
+        public static int updateDownloadCount(string UniqueName)
+        {
+            string connString = @"Data Source=localhost;Initial Catalog=GoogleDrive;User ID=sa;Password=123";
+            using (SqlConnection conn = new SqlConnection(connString))
+            {
+                conn.Open();
+                string query = string.Format(@"update Files set Downloads = Downloads + 1 where UniqueName = @UniqueName");
+                SqlCommand command = new SqlCommand(query, conn);
+                SqlParameter param = new SqlParameter
+                {
+                    ParameterName = "UniqueName",
+                    SqlDbType = System.Data.SqlDbType.VarChar,
+                    Value = UniqueName
+                };
+                command.Parameters.Add(param);
+                int result = command.ExecuteNonQuery();
+                return result;
+            }
+        }
+
         public static FileDTO downloadFile(int id)
         {
             string connString = @"Data Source=localhost;Initial Catalog=GoogleDrive;User ID=sa;Password=123";
             using (SqlConnection conn = new SqlConnection(connString))
             {
                 conn.Open();
-                string query = string.Format(@"select * from Files where Id = @id");
+                string query = string.Format(@"update Files set Downloads = Downloads + 1 where Id = @id");
                 SqlCommand command = new SqlCommand(query, conn);
-
                 SqlParameter param = new SqlParameter
                 {
                     ParameterName = "Id",
@@ -1131,14 +1150,27 @@ namespace GoogleDrive.Models
                     Value = id
                 };
                 command.Parameters.Add(param);
-
-                SqlDataReader reader = command.ExecuteReader();
+                int result = command.ExecuteNonQuery();
                 FileDTO dto = new FileDTO();
-                if (reader.Read())
+                if (result > 0)
                 {
-                    dto.UniqueName = reader.GetString(1);
-                    dto.Name = reader.GetString(2);
-                    dto.FileExt = reader.GetString(4);
+                    query = string.Format(@"select * from Files where Id = @id");
+                    command = new SqlCommand(query, conn);
+
+                    param = new SqlParameter
+                    {
+                        ParameterName = "Id",
+                        SqlDbType = System.Data.SqlDbType.VarChar,
+                        Value = id
+                    };
+                    command.Parameters.Add(param);
+                    SqlDataReader reader = command.ExecuteReader();
+                    if (reader.Read())
+                    {
+                        dto.UniqueName = reader.GetString(1);
+                        dto.Name = reader.GetString(2);
+                        dto.FileExt = reader.GetString(4);
+                    }
                 }
                 return dto;
             }

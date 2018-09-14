@@ -9,12 +9,12 @@
     $("#suserlogin").keyup(function () {
         var $login = $("#suserlogin").val();
         if ($login == "") {
-            $("#sharebtn").fadeOut("slow");
-            $("#cancelsharebtn").fadeIn("slow");
+            $("#sharebtn").text("Close").removeClass("btn-outline-success").addClass("btn-outline-danger");
+            $("#sharebtn").removeAttr("id").attr({ id: "cancelsharebtn" });
             return;
         }
-        $("#cancelsharebtn").fadeOut("slow");
-        $("#sharebtn").fadeIn("slow");
+        $("#cancelsharebtn").text("Share").removeClass("btn-outline-danger").addClass("btn-outline-success");
+        $("#cancelsharebtn").removeAttr("id").attr({ id: "sharebtn" });
         return;
     });
 
@@ -424,8 +424,9 @@
                     $("#suserlogin").val("");
                     $("#specificshare").slideDown("slow");
                     $("#sharedusers").empty();
-                    $("#sharebtn").click(function () {
-                        $(this).closest('div').hide();
+                    $("#specificshare").on('click', '#sharebtn', function () {
+                        var $btn = $(this).prop('disabled', true);
+                        $btn.closest('div').hide();
                         $("#spinner").show();
                         var $id = $("#sfileid").val();
                         var $login = $("#suserlogin").val();
@@ -441,6 +442,7 @@
                             success: function (result) {
                                 console.log(result);
                                 $("#spinner").hide();
+                                $btn.prop('disabled', false);
                                 if (result == "CurrentUser") {
                                     var $alert = $("#lg-msg");
                                     $alert.removeClass("alert-success");
@@ -802,7 +804,8 @@
         var $id = $("#mfolderid").val();
         var $parentid = $("#parentfolderid").val();
         var $foldername = $("#mfoldername").val();
-        if (!$foldername){
+        if (!$foldername) {
+            $("#spinner").hide();
             var $alert = $("#lg-msg");
             $alert.addClass("alert-danger");
             $alert.find("strong").text("Oops ! ");
