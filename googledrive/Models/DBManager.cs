@@ -988,7 +988,7 @@ namespace GoogleDrive.Models
             using (SqlConnection conn = new SqlConnection(connString))
             {
                 conn.Open();
-                string query = string.Format(@"delete from Folders where Id = @Id OR ParentFolderId = @Id; delete from Files where ParentFolderId = @Id");
+                string query = string.Format(@"WITH FoldersLite AS (select Id As pId from Folders where Id = @Id UNION ALL select e.Id from Folders e INNER JOIN Folders m  ON e.ParentFolderId = m.Id ) delete from Folders where Id IN (select * from FoldersLite)");
                 SqlCommand command = new SqlCommand(query, conn);
 
                 SqlParameter param = new SqlParameter
