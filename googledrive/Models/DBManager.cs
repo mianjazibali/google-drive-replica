@@ -681,6 +681,7 @@ namespace GoogleDrive.Models
                     file.FileSizeInKB = reader.GetInt32(5);
                     file.CreatedBy = reader.GetInt32(6);
                     file.UploadedOn = reader.GetDateTime(7).ToString("dd/MM/yyyy hh:mm tt");
+                    file.Downloads = reader.GetInt32(9);
                     if (!reader.IsDBNull(11))
                     {
                         file.Token = reader.GetString(11);
@@ -731,6 +732,7 @@ namespace GoogleDrive.Models
                     file.FileSizeInKB = reader.GetInt32(5);
                     file.CreatedBy = reader.GetInt32(6);
                     file.UploadedOn = reader.GetDateTime(7).ToString("dd/MM/yyyy hh:mm tt");
+                    file.Downloads = reader.GetInt32(9);
                     if (!reader.IsDBNull(11))
                     {
                         file.Token = reader.GetString(11);

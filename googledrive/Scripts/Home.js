@@ -209,7 +209,7 @@
             td.text(result[i].UploadedOn);
             tr.append(td);
             td = $('<td>');
-            td.text("--");
+            td.text(result[i].Downloads);
             tr.append(td);
             var body = $('#TableBody');
             body.append(tr);
@@ -701,7 +701,7 @@
                     td.text(result[i].UploadedOn);
                     tr.append(td);
                     td = $('<td>');
-                    td.text("--");
+                    td.text(result[i].Downloads);
                     tr.append(td);
                     var body = $('#TableBody');
                     body.append(tr);
