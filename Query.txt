@@ -38,8 +38,6 @@ CreatedBy int not null,
 UploadedOn datetime not null,
 IsActive bit not null default 0,
 Downloads int not null default 0,
-Token varchar(50) null,
-Share varchar(50) null,
 Primary key(Id)
 )
 

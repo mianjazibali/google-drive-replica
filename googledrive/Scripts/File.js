@@ -1,7 +1,6 @@
 ﻿$(document).ready(function () {
     $("#dummydownloadbtn").click(function () {
         var $filename = $("#filename").val();
-        alert($filename);
         var $data = ({ 'UniqueName': $filename });
         $.ajax({
             type: 'POST',

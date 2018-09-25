@@ -249,6 +249,7 @@
                             var $alert = $("#lg-msg");
                             $alert.removeClass("alert-danger");
                             $alert.addClass("alert-success");
+                            $alert.find("strong").text("Yep ! ");
                             $alert.find("span").text("Folder \"" + $name + "\" Deleted Successfully");
                             $alert.fadeIn("slow").delay(5000).slideUp("slow");
                             $tr.remove();
@@ -302,6 +303,7 @@
                             var $alert = $("#lg-msg");
                             $alert.removeClass("alert-danger");
                             $alert.addClass("alert-success");
+                            $alert.find("strong").text("Yep ! ");
                             $alert.find("span").text("File \"" + $name + "\" Deleted Successfully");
                             $alert.fadeIn("slow").delay(5000).slideUp("slow");
                             $tr.remove();
@@ -558,6 +560,26 @@
             var $id = $("#mfileid").val();
             var $filename = $("#mfilename").val();
             var $data = ({ 'Id': $id, 'Name': $filename });
+            if (!$filename) {
+                $("#spinner").hide();
+                var $alert = $("#lg-msg");
+                $alert.addClass("alert-danger");
+                $alert.find("strong").text("Oops ! ");
+                $alert.find("span").text("Empty File Name");
+                $alert.fadeIn("slow").delay(5000).slideUp("slow");
+                $("#createfileinput").slideUp();
+                return false;
+            }
+            if (!$id) {
+                $("#spinner").hide();
+                var $alert = $("#lg-msg");
+                $alert.addClass("alert-danger");
+                $alert.find("strong").text("Oops ! ");
+                $alert.find("span").text("File Id Not Supplied");
+                $alert.fadeIn("slow").delay(5000).slideUp("slow");
+                $("#createfileinput").slideUp();
+                return false;
+            }
 
             $.ajax({
                 type: 'POST',
