@@ -42,7 +42,7 @@ namespace GoogleDrive.Models
                 }
                 reader.Close();
 
-                query = string.Format(@"select Name from Users where Login = @Login AND Password = @Password AND Token IS NULL");
+                query = string.Format(@"select Name from Users where Login = @Login AND Password = @Password AND Token = 'NULL'");
                 command = new SqlCommand(query, conn);
 
                 param = new SqlParameter
@@ -217,7 +217,7 @@ namespace GoogleDrive.Models
             using (SqlConnection conn = new SqlConnection(connString))
             {
                 conn.Open();
-                string query = string.Format("select Token from Shared where FileId = @Id AND OwnerLogin IS NULL");
+                string query = string.Format("select Token from Shared where FileId = @Id AND OwnerLogin = 'NULL'");
                 SqlCommand command = new SqlCommand(query, conn);
                 SqlParameter param = new SqlParameter
                 {
@@ -254,7 +254,7 @@ namespace GoogleDrive.Models
                     command.Parameters.Add(param);
                     command.ExecuteNonQuery();
                 }
-                query = string.Format("delete from Shared where FileId = @Id AND OwnerLogin IS NOT NULL");
+                query = string.Format("delete from Shared where FileId = @Id AND OwnerLogin != 'NULL'");
                 command = new SqlCommand(query, conn);
                 param = new SqlParameter
                 {
@@ -359,7 +359,7 @@ namespace GoogleDrive.Models
                         int result = command.ExecuteNonQuery();
                         if (result > 0)
                         {
-                            query = string.Format("delete from Shared where FileId = @Id AND OwnerLogin IS NULL");
+                            query = string.Format("delete from Shared where FileId = @Id AND OwnerLogin = 'NULL'");
                             command = new SqlCommand(query, conn);
                             param = new SqlParameter
                             {
@@ -414,7 +414,7 @@ namespace GoogleDrive.Models
             using (SqlConnection conn = new SqlConnection(connString))
             {
                 conn.Open();
-                string query = string.Format(@"select FileId from Shared where Token = @Token AND OwnerLogin IS NULL OR OwnerLogin = @Login");
+                string query = string.Format(@"select FileId from Shared where Token = @Token AND OwnerLogin = 'NULL' OR OwnerLogin = @Login");
                 SqlCommand command = new SqlCommand(query, conn);
 
                 SqlParameter param = new SqlParameter
@@ -974,7 +974,7 @@ namespace GoogleDrive.Models
                 param = new SqlParameter
                 {
                     ParameterName = "CreatedOn",
-                    SqlDbType = System.Data.SqlDbType.VarChar,
+                    SqlDbType = System.Data.SqlDbType.DateTime,
                     Value = DateTime.Now
                 };
                 command.Parameters.Add(param);
@@ -1288,7 +1288,8 @@ namespace GoogleDrive.Models
                         Value = System.DateTime.Now
                     };
                     command.Parameters.Add(param);
-                    command.ExecuteNonQuery();
+                    int temp = command.ExecuteNonQuery();
+                    temp++;
                 }
                 return result - exist;
             }

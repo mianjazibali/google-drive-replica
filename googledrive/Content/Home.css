@@ -69,10 +69,12 @@ td {
     color: lightslategrey !important;
     cursor: text;
     text-decoration: none !important;
+    pointer-events: none;
 }
 
 .breadcrumb-item.active a:hover {
     color: lightslategrey !important;
+    pointer-events: none;
 }
 
 .navbar-nav .nav-item a.nav-link {

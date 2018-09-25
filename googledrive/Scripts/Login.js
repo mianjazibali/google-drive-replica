@@ -72,7 +72,6 @@
                     $alert.slideDown("slow").delay(5000).slideUp("slow");
                     return false;
                 }
-                return;
             },
             error: function (err) {
                 $("#loadericon").hide();
@@ -163,13 +162,11 @@
     });
     
     $("#loginbtn").click(function () {
-        $(this).attr("disabled", "disabled");
         $("#loadericon").show();
         var $userlogin = $("#userlogin").val();
         var $userpassword = $("#userpassword").val();
 
         if ((!$userlogin) || (!$userpassword)) {
-            $("#loginbtn").prop("disabled", false);
             $("#loadericon").hide();
             var $alert = $("#lg-msg");
             $alert.addClass("alert-danger");

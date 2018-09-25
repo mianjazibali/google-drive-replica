@@ -318,7 +318,10 @@
                 else
                 if (key == "download") {
                     $("#spinner").show();
-                    var $id = $(this).find(':nth-child(1)').text();
+                    var $tr = $(this);
+                    var $id = $tr.find(':nth-child(1)').text();
+                    var $downloads = $tr.find(':nth-child(7)').text();
+                    $downloads = parseInt($downloads) + 1;
                     $.ajax({
                         type: "POST",
                         url: '/Home/DownloadFile/' + $id,
@@ -326,6 +329,7 @@
                         processData: false,
                         success: function (result) {
                             $("#spinner").hide();
+                            $tr.find(':nth-child(7)').text($downloads);
                             //alert(result.UniqueName + result.FileExt + result.Name);
                             //window.location = "Uploads/" + result.UniqueName + result.FileExt;
                             //$.fileDownload("Uploads/" + result.UniqueName + result.FileExt);
@@ -832,12 +836,12 @@
                     $alert.find("span").text("\"" + $foldername + "\" Already Exist");
                     $alert.fadeIn("slow").delay(5000).slideUp("slow");
                     $("#createfolderinput").slideUp();
-                    return false;
                 }
                 $('#mfoldername').val("");
                 LoadFolders();
                 $("#createfolderinput").slideUp();
                 $("#spinner").hide();
+                return false;
             },
             error: function (err) {
                 $("#spinner").hide();
@@ -846,6 +850,7 @@
                 $alert.find("strong").text("Error ! ");
                 $alert.find("span").text(err.statusText);
                 $alert.fadeIn("slow").delay(5000).slideUp("slow");
+                return false;
             }
         });
     });
